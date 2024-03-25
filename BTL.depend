@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1711375143 source:e:\projects\btl\main.cpp
+	<iostream>
+	<string>
+	<SDL.h>
+	<SDL_image.h>
+	"CommonFunction.h"
+
+1711376149 e:\projects\btl\commonfunction.h
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+	<ctime>
+	<cstdlib>
+
+1711376240 source:e:\projects\btl\commonfunction.cpp
+	"CommonFunction.h"
+
+1711376495 source:e:\projects\btl\demo.cpp
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+	<ctime>
+	<cstdlib>
+
