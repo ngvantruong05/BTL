@@ -13,13 +13,13 @@ int main(int argc, char* args[]) {
         std::cout << "Failed to initialize!" << std::endl;
         return -1;
     }
-    bool quit = false;
-    while (!quit) {
-        handleEvents(quit);
-        update();
-        render();
-        SDL_Delay(10);
-    }
+//    bool quit = false;
+//    while (!quit) {
+//        handleEvents(quit);
+//        update();
+//        render();
+//        SDL_Delay(10);
+//    }
     close();
     return 0;
 }

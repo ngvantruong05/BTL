@@ -21,8 +21,6 @@ bool init() {
     }
 
     SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-    // Load background image
     SDL_Surface* backgroundSurface = IMG_Load("vutru.jpg");
     if (backgroundSurface == NULL) {
         std::cout << "Failed to load background image! SDL_Error: " << IMG_GetError() << std::endl;
@@ -31,7 +29,6 @@ bool init() {
     backgroundTexture = SDL_CreateTextureFromSurface(gRenderer, backgroundSurface);
     SDL_FreeSurface(backgroundSurface);
 
-    // Load bird image
     SDL_Surface* birdSurface = IMG_Load("plane.png");
     if (birdSurface == NULL) {
         std::cout << "Failed to load bird image! SDL_Error: " << IMG_GetError() << std::endl;
@@ -40,12 +37,13 @@ bool init() {
     birdTexture = SDL_CreateTextureFromSurface(gRenderer, birdSurface);
     SDL_FreeSurface(birdSurface);
 
-    // Load pipe image
     SDL_Surface* pipeSurface = IMG_Load("chicken.jpg");
     if (pipeSurface == NULL) {
         std::cout << "Failed to load pipe image! SDL_Error: " << IMG_GetError() << std::endl;
         return false;
     }
+    pipeTexture = SDL_CreateTextureFromSurface(gRenderer, pipeSurface);
+    SDL_FreeSurface(pipeSurface);
     return true;
 }
 
@@ -59,8 +57,7 @@ void close() {
 void render() {
     SDL_RenderClear(gRenderer);
     SDL_Rect backgroundRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-    SDL_RenderCopy(gRenderer, backgroundTexture, NULL, &backgroundRect);
-//    SDL_Rect birdRect = { bird.x, bird.y, BIRD_WIDTH, BIRD_HEIGHT };
-//    SDL_RenderCopy(gRenderer, birdTexture, NULL, &birdRect);
+    SDL_RenderCopy(gRenderer, backgroundTexture, NULL, NULL);
+    SDL_RenderPresent(gRenderer);
+    SDL_Delay(3000);
 }
-

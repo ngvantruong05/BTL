@@ -23,3 +23,22 @@
 	<ctime>
 	<cstdlib>
 
+1711377274 source:c:\users\nguye\documents\github\btl\commonfunction.cpp
+	"CommonFunction.h"
+
+1711377274 c:\users\nguye\documents\github\btl\commonfunction.h
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+	<ctime>
+	<cstdlib>
+
+1711377444 source:c:\users\nguye\documents\github\btl\main.cpp
+	<iostream>
+	<string>
+	<SDL.h>
+	<SDL_image.h>
+	"CommonFunction.h"
+
+1711378941 source:c:\users\nguye\documents\github\btl\baseobject.cpp
+

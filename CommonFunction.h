@@ -1,4 +1,5 @@
 
+
 #ifndef COMMONFUNCTION_H_
 #define COMMONFUNCTION_H_
 #include <SDL.h>
