@@ -1,5 +1,4 @@
 
-
 #ifndef COMMONFUNCTION_H_
 #define COMMONFUNCTION_H_
 #include <SDL.h>
@@ -18,12 +17,12 @@ static SDL_Window* gWindow = NULL;
 static SDL_Renderer* gRenderer = NULL;
 
 static SDL_Texture* backgroundTexture = NULL;
-static SDL_Texture* birdTexture = NULL;
+static SDL_Texture* chickenTexture = NULL;
 static SDL_Texture* pipeTexture = NULL;
 
-//namespace COMMONFUNCTION
-    bool init();
+namespace CommonFunction
+{
     void close();
     void render();
-
+}
 #endif

@@ -32,8 +32,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="BaseObject.cpp" />
+		<Unit filename="BaseObject.h" />
 		<Unit filename="CommonFunction.cpp" />
 		<Unit filename="CommonFunction.h" />
+		<Unit filename="MainObject.cpp" />
+		<Unit filename="MainObject.h" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>
