@@ -14,8 +14,12 @@ int main(int argc, char* argv[]) {
         cout << "Failed to initialize!" << std::endl;
         return -1;
     }
+//    CommonFunction::init();
+    //MainObject::init();
     BaseObject plane;
     plane.SetPosition((SCREEN_WIDTH - 100)/2,SCREEN_HEIGHT - 100);
+
+    BaseObject bullets;
     bool quit = false;
     SDL_Event event;
     while (!quit) {

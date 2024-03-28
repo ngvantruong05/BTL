@@ -1,15 +1,12 @@
-//
-//// Đối tượng nhân vật chính. Kế thừa từ BaseObject
-//
-//#ifndef MAIN_OBJECT_H_
-//#define MAIN_OBJECT_H_TH
-//
-//#include "CommonFunction.h"
-//#include "BaseObject.h"
-//#include <vector>
-//
-//#define WIDTH_MAIN_OBJECT 42
-//#define HEIGHT_MAIN_OBJECT 60
+
+#ifndef MAIN_OBJECT_H_
+#define MAIN_OBJECT_H_TH
+#include "CommonFunction.h"
+#include "BaseObject.h"
+#include <vector>
+
+#define WIDTH_MAIN_OBJECT 42
+#define HEIGHT_MAIN_OBJECT 60
 //
 //class MainObject : public BaseObject
 //{
@@ -37,6 +34,27 @@
 //    int y_val_;
 ////    std::vector<AmoObject*> p_amo_list;
 //};
-//
-//
-//#endif // MAIN_OBJECT_H_
+using namespace std;
+
+class MainObject {
+public:
+    MainObject();
+    ~MainObject();
+
+
+    // Hàm để di chuyển đạn và gà
+    void MoveBullets();
+    void MoveChickens();
+
+    // Hàm để thêm đạn và gà vào game
+    void AddBullet();
+    void render();
+
+private:
+    int x;
+    int y;
+    vector<SDL_Rect> bullets_; // Danh sách các đạn
+    vector<SDL_Rect> chickens_; // Danh sách các gà
+};
+
+#endif // MAIN_OBJECT_H_

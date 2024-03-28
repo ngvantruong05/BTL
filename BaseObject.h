@@ -115,7 +115,6 @@ public:
     void SetY(int newY) { y = newY; } // Phương thức thiết lập giá trị mới cho y
     void SetPosition(int x, int y);
     void Move(SDL_Event& event);
-
 private:
     int x;
     int y;
@@ -123,7 +122,6 @@ private:
     int height;
 
     SDL_Rect rect_;
-    const int SPEED = 5;
 };
 
 #endif // BASE_OBJECT_H

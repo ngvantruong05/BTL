@@ -13,16 +13,17 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const int RECT_WIDTH = 50;
 const int RECT_HEIGHT = 50;
-const int SPEED = 10;
+const int SPEED = 20;
 
 static SDL_Window* gWindow = NULL;
 static SDL_Renderer* gRenderer = NULL;
 
 static SDL_Texture* backgroundTexture = NULL;
-static SDL_Texture* chickenTexture = NULL;
+static SDL_Texture* planeTexture = NULL;
 
 namespace CommonFunction
 {
+//    void init();
     bool init();
     void close();
     void render(int x, int y);

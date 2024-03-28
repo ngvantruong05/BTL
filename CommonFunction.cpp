@@ -2,14 +2,6 @@
 #include "CommonFunction.h"
 #include "BaseObject.h"
 using namespace std;
-//void CommonFunction::init() {
-//    SDL_Init(SDL_INIT_VIDEO);
-//    gWindow = SDL_CreateWindow("Chicken and Background", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-//    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-//    IMG_Init(IMG_INIT_PNG);
-//    backgroundTexture = IMG_LoadTexture(gRenderer, "vutru.jpg");
-//    chickenTexture = IMG_LoadTexture(gRenderer, "plane.png");
-//}
 
 bool CommonFunction::init() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -43,7 +35,7 @@ bool CommonFunction::init() {
         std::cout << "Failed to load bird image! SDL_Error: " << IMG_GetError() << std::endl;
         return false;
     }
-    chickenTexture = SDL_CreateTextureFromSurface(gRenderer, planeSurface);
+    planeTexture = SDL_CreateTextureFromSurface(gRenderer, planeSurface);
     SDL_FreeSurface(planeSurface);
     return true;
 }
@@ -51,14 +43,14 @@ bool CommonFunction::init() {
 void CommonFunction::render(int x, int y) {
     SDL_RenderClear(gRenderer);
     SDL_RenderCopy(gRenderer, backgroundTexture, nullptr, nullptr);
-    SDL_Rect chickenRect = { x, y, 100, 100};
-    SDL_RenderCopy(gRenderer, chickenTexture, nullptr, &chickenRect);
+    SDL_Rect planeRect = { x, y, 100, 100};
+    SDL_RenderCopy(gRenderer, planeTexture, nullptr, &planeRect);
     SDL_RenderPresent(gRenderer);
 }
 
 void CommonFunction::close() {
     SDL_DestroyTexture(backgroundTexture);
-    SDL_DestroyTexture(chickenTexture);
+    SDL_DestroyTexture(planeTexture);
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     IMG_Quit();

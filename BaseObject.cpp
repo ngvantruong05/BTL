@@ -151,9 +151,9 @@ void BaseObject::Move(SDL_Event& event) {
         } else if (event.key.keysym.sym == SDLK_RIGHT) {
             x += SPEED;
         } else if (event.key.keysym.sym == SDLK_UP) {
-            y -= SPEED;
+            y -= SPEED/2;
         } else if (event.key.keysym.sym == SDLK_DOWN) {
-            y += SPEED;
+            y += SPEED/2;
         }
     }
 
@@ -164,9 +164,10 @@ void BaseObject::Move(SDL_Event& event) {
         x = SCREEN_WIDTH - width;
     }
 
-    if (y < 0) {
-        y = 0;
+    if (y < SCREEN_HEIGHT/2) {
+        y = SCREEN_HEIGHT/2;
     } else if (y + height > SCREEN_HEIGHT) {
         y = SCREEN_HEIGHT - height;
     }
 }
+
