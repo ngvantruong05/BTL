@@ -22,35 +22,42 @@ bool CommonFunction::init() {
     }
 
     SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_Surface* backgroundSurface = IMG_Load("vutru.jpg");
-    if (backgroundSurface == NULL) {
-        std::cout << "Failed to load background image! SDL_Error: " << IMG_GetError() << std::endl;
-        return false;
-    }
-    backgroundTexture = SDL_CreateTextureFromSurface(gRenderer, backgroundSurface);
-    SDL_FreeSurface(backgroundSurface);
+    backgroundTexture = LoadTexture("vutru.jpg");
 
-    SDL_Surface* planeSurface = IMG_Load("plane.png");
-    if (planeSurface == NULL) {
-        std::cout << "Failed to load bird image! SDL_Error: " << IMG_GetError() << std::endl;
-        return false;
-    }
-    planeTexture = SDL_CreateTextureFromSurface(gRenderer, planeSurface);
-    SDL_FreeSurface(planeSurface);
+
     return true;
 }
 
-void CommonFunction::render(int x, int y) {
+SDL_Texture* CommonFunction::LoadTexture(const std::string& filePath) {
+    SDL_Surface* surface = IMG_Load(filePath.c_str());
+    if (surface == nullptr) {
+        std::cout << "Failed to load texture: " << filePath << ". SDL_Error: " << SDL_GetError() << std::endl;
+        return nullptr;
+    }
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(gRenderer, surface);
+    SDL_FreeSurface(surface);
+    return texture;
+}
+
+void CommonFunction::RenderTexture(SDL_Texture* texture, int x, int y, int w, int h) {
     SDL_RenderClear(gRenderer);
     SDL_RenderCopy(gRenderer, backgroundTexture, nullptr, nullptr);
-    SDL_Rect planeRect = { x, y, 100, 100};
-    SDL_RenderCopy(gRenderer, planeTexture, nullptr, &planeRect);
+    SDL_Rect destRect = {x, y, w, h};
+    SDL_RenderCopy(gRenderer, texture, nullptr, &destRect);
     SDL_RenderPresent(gRenderer);
 }
 
+
+//void CommonFunction::render(int x, int y) {
+//    SDL_RenderClear(gRenderer);
+//    SDL_RenderCopy(gRenderer, backgroundTexture, nullptr, nullptr);
+//    SDL_Rect planeRect = { x, y, 100, 100};
+//    SDL_RenderCopy(gRenderer, planeTexture, nullptr, &planeRect);
+//    SDL_RenderPresent(gRenderer);
+//}
+//
 void CommonFunction::close() {
     SDL_DestroyTexture(backgroundTexture);
-    SDL_DestroyTexture(planeTexture);
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     IMG_Quit();

@@ -48,7 +48,6 @@ public:
 
     // Hàm để thêm đạn và gà vào game
     void AddBullet();
-    void render();
 
 private:
     int x;

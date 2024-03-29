@@ -19,13 +19,12 @@ static SDL_Window* gWindow = NULL;
 static SDL_Renderer* gRenderer = NULL;
 
 static SDL_Texture* backgroundTexture = NULL;
-static SDL_Texture* planeTexture = NULL;
 
 namespace CommonFunction
 {
-//    void init();
     bool init();
+    SDL_Texture* LoadTexture(const string& filePath);
+    void RenderTexture(SDL_Texture* texture, int x, int y, int w, int h);
     void close();
-    void render(int x, int y);
 }
 #endif

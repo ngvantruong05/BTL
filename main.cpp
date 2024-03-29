@@ -9,13 +9,30 @@
 #define HEIGHT_MAIN_OBJECT 46
 using namespace std;
 
+SDL_Texture* planeTexture = NULL;
+SDL_Texture* bulletTexture = NULL;
+SDL_Texture* chickenTexture = NULL;
+
+//void text();
+void text()
+{
+    planeTexture = CommonFunction::LoadTexture("plane.png");
+    bulletTexture = CommonFunction::LoadTexture("laser.png");
+    //chickenTexture = CommonFunction::LoadTexture("chicken.png");
+}
+void close()
+{
+    SDL_DestroyTexture(planeTexture);
+    SDL_DestroyTexture(bulletTexture);
+    SDL_DestroyTexture(chickenTexture);
+}
+
 int main(int argc, char* argv[]) {
     if (!CommonFunction::init()) {
         cout << "Failed to initialize!" << std::endl;
         return -1;
     }
-//    CommonFunction::init();
-    //MainObject::init();
+    text();
     BaseObject plane;
     plane.SetPosition((SCREEN_WIDTH - 100)/2,SCREEN_HEIGHT - 100);
 
@@ -30,8 +47,9 @@ int main(int argc, char* argv[]) {
             else
                 plane.Move(event);
         }
-        CommonFunction::render(plane.GetX(),plane.GetY());
+        CommonFunction::RenderTexture(planeTexture,plane.GetX(),plane.GetY(),100,100);
     }
+    close();
     CommonFunction::close();
     return 0;
 }
