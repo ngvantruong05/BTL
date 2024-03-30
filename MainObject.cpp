@@ -172,12 +172,10 @@ MainObject::~MainObject() {
 }
 
 void MainObject::MoveBullets() {
-    // Di chuyển đạn từ trên xuống
     for (int i = 0; i < bullets_.size(); ++i) {
-        bullets_[i].y -= SPEED; // Giảm tọa độ y để di chuyển lên trên
-        // Xử lý việc đạn ra khỏi màn hình
+        bullets_[i].y -= SPEED/20;
         if (bullets_[i].y + HEIGHT_MAIN_OBJECT < 0) {
-            bullets_.erase(bullets_.begin() + i); // Xóa đạn ra khỏi danh sách nếu ra khỏi màn hình
+            bullets_.erase(bullets_.begin() + i);
         }
     }
 }
@@ -193,9 +191,12 @@ void MainObject::MoveChickens() {
     }
 }
 
-void MainObject::AddBullet() {
+void MainObject::AddBullet(int x,int y) {
     // Thêm một viên đạn mới vào danh sách
-    SDL_Rect bullet = {x + WIDTH_MAIN_OBJECT / 2 - WIDTH_MAIN_OBJECT / 4, y, WIDTH_MAIN_OBJECT / 2, HEIGHT_MAIN_OBJECT};
+    SDL_Rect bullet = {x - WIDTH_MAIN_OBJECT / 2, y, WIDTH_MAIN_OBJECT / 2, HEIGHT_MAIN_OBJECT};
     bullets_.push_back(bullet);
 }
 
+const std::vector<SDL_Rect>& MainObject::GetBullets() const {
+    return bullets_;
+}

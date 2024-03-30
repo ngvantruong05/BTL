@@ -145,19 +145,16 @@ void BaseObject::SetPosition(int x, int y) {
 }
 
 void BaseObject::Move(SDL_Event& event) {
-    if (event.type == SDL_KEYDOWN) {
-        if (event.key.keysym.sym == SDLK_LEFT) {
-            x -= SPEED;
-        } else if (event.key.keysym.sym == SDLK_RIGHT) {
-            x += SPEED;
-        } else if (event.key.keysym.sym == SDLK_UP) {
-            y -= SPEED/2;
-        } else if (event.key.keysym.sym == SDLK_DOWN) {
-            y += SPEED/2;
-        }
+    if (event.key.keysym.sym == SDLK_LEFT) {
+        x -= SPEED;
+    } else if (event.key.keysym.sym == SDLK_RIGHT) {
+        x += SPEED;
+    } else if (event.key.keysym.sym == SDLK_UP) {
+        y -= SPEED/2;
+    } else if (event.key.keysym.sym == SDLK_DOWN) {
+        y += SPEED/2;
     }
 
-    // Kiểm tra giới hạn màn hình
     if (x < 0) {
         x = 0;
     } else if (x + width > SCREEN_WIDTH) {

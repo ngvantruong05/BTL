@@ -24,7 +24,7 @@ bool CommonFunction::init() {
     SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
     backgroundTexture = LoadTexture("vutru.jpg");
 
-
+    SDL_RenderCopy(gRenderer, backgroundTexture, nullptr, nullptr);
     return true;
 }
 
@@ -36,26 +36,21 @@ SDL_Texture* CommonFunction::LoadTexture(const std::string& filePath) {
     }
     SDL_Texture* texture = SDL_CreateTextureFromSurface(gRenderer, surface);
     SDL_FreeSurface(surface);
+     SDL_RenderClear(gRenderer);
     return texture;
 }
 
 void CommonFunction::RenderTexture(SDL_Texture* texture, int x, int y, int w, int h) {
-    SDL_RenderClear(gRenderer);
-    SDL_RenderCopy(gRenderer, backgroundTexture, nullptr, nullptr);
     SDL_Rect destRect = {x, y, w, h};
     SDL_RenderCopy(gRenderer, texture, nullptr, &destRect);
+}
+void CommonFunction::show()
+{
     SDL_RenderPresent(gRenderer);
+    SDL_RenderClear(gRenderer);
+    SDL_RenderCopy(gRenderer, backgroundTexture, nullptr, nullptr);
 }
 
-
-//void CommonFunction::render(int x, int y) {
-//    SDL_RenderClear(gRenderer);
-//    SDL_RenderCopy(gRenderer, backgroundTexture, nullptr, nullptr);
-//    SDL_Rect planeRect = { x, y, 100, 100};
-//    SDL_RenderCopy(gRenderer, planeTexture, nullptr, &planeRect);
-//    SDL_RenderPresent(gRenderer);
-//}
-//
 void CommonFunction::close() {
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyRenderer(gRenderer);

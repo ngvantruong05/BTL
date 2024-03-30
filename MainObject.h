@@ -5,8 +5,6 @@
 #include "BaseObject.h"
 #include <vector>
 
-#define WIDTH_MAIN_OBJECT 42
-#define HEIGHT_MAIN_OBJECT 60
 //
 //class MainObject : public BaseObject
 //{
@@ -47,7 +45,8 @@ public:
     void MoveChickens();
 
     // Hàm để thêm đạn và gà vào game
-    void AddBullet();
+    void AddBullet(int x, int y);
+    const std::vector<SDL_Rect>& GetBullets() const;
 
 private:
     int x;
