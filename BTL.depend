@@ -23,22 +23,24 @@
 	<ctime>
 	<cstdlib>
 
-1711785552 source:c:\users\nguye\documents\github\btl\commonfunction.cpp
+1711818074 source:c:\users\nguye\documents\github\btl\commonfunction.cpp
 	"CommonFunction.h"
 	"BaseObject.h"
 
-1711786922 c:\users\nguye\documents\github\btl\commonfunction.h
+1711817925 c:\users\nguye\documents\github\btl\commonfunction.h
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
 	<iostream>
 	<ctime>
 	<cstdlib>
 
-1711788191 source:c:\users\nguye\documents\github\btl\main.cpp
+1711818173 source:c:\users\nguye\documents\github\btl\main.cpp
 	<iostream>
 	<string>
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
 	"CommonFunction.h"
 	"BaseObject.h"
 	"MainObject.h"
@@ -50,10 +52,10 @@
 1711624488 c:\users\nguye\documents\github\btl\baseobject.h
 	<SDL.h>
 
-1711788259 source:c:\users\nguye\documents\github\btl\mainobject.cpp
+1711815293 source:c:\users\nguye\documents\github\btl\mainobject.cpp
 	"MainObject.h"
 
-1711787761 c:\users\nguye\documents\github\btl\mainobject.h
+1711815293 c:\users\nguye\documents\github\btl\mainobject.h
 	"CommonFunction.h"
 	"BaseObject.h"
 	<vector>

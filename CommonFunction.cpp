@@ -20,6 +20,15 @@ bool CommonFunction::init() {
         std::cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         return false;
     }
+    if (TTF_Init() == -1) {
+        std::cout << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << std::endl;
+        return false;
+    }
+    gFont = TTF_OpenFont("diem.ttf", 29);
+    if (gFont == NULL) {
+        std::cout << "Failed to load font! SDL_ttf Error: " << TTF_GetError() << std::endl;
+        return false;
+    }
 
     SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
     backgroundTexture = LoadTexture("vutru.jpg");
@@ -52,10 +61,31 @@ void CommonFunction::show()
 }
 
 void CommonFunction::close() {
+    TTF_CloseFont(gFont);
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     IMG_Quit();
     SDL_Quit();
+    TTF_Quit();
+}
+
+void CommonFunction::renderText(const std::string& text, int x, int y) {
+    SDL_Color textColor = {255, 0, 0};
+    SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, text.c_str(), textColor);
+    if (textSurface == NULL) {
+        std::cerr << "Unable to render text surface! SDL_ttf Error: " << TTF_GetError() << std::endl;
+    } else {
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+        if (texture == NULL) {
+            std::cerr << "Unable to create texture from rendered text! SDL Error: " << SDL_GetError() << std::endl;
+        } else {
+            SDL_Rect renderQuad = {x, y, textSurface->w, textSurface->h};
+            SDL_RenderCopy(gRenderer, texture, NULL, &renderQuad);
+            SDL_DestroyTexture(texture);
+        }
+
+        SDL_FreeSurface(textSurface);
+    }
 }
 
