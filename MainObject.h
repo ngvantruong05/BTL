@@ -47,6 +47,7 @@ public:
     // Hàm để thêm đạn và gà vào game
     void AddBullet(int x, int y);
     const std::vector<SDL_Rect>& GetBullets() const;
+    const std::vector<SDL_Rect>& GetChickens() const;
 
 private:
     int x;

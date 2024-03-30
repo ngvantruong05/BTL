@@ -181,9 +181,15 @@ void MainObject::MoveBullets() {
 }
 
 void MainObject::MoveChickens() {
-    // Di chuyển gà từ trên xuống
+     // Sinh gà ngẫu nhiên từ trên xuống
+    if (rand() % 1000 < 5) { // Sinh gà với xác suất 5% trong mỗi lần di chuyển
+        int x = rand() % SCREEN_WIDTH; // Sinh tọa độ x ngẫu nhiên
+        int y = -HEIGHT_MAIN_OBJECT - 100; // Gà được sinh ở trên cùng của màn hình
+        SDL_Rect chickenRect = {x, y, WIDTH_MAIN_OBJECT, HEIGHT_MAIN_OBJECT};
+        chickens_.push_back(chickenRect); // Thêm gà vào danh sách
+    }
     for (int i = 0; i < chickens_.size(); ++i) {
-        chickens_[i].y += SPEED; // Tăng tọa độ y để di chuyển xuống dưới
+        chickens_[i].y += SPEED/20; // Tăng tọa độ y để di chuyển xuống dưới
         // Xử lý việc gà chạm đáy màn hình
         if (chickens_[i].y > SCREEN_HEIGHT) {
             chickens_.erase(chickens_.begin() + i); // Xóa gà ra khỏi danh sách nếu chạm đáy màn hình
@@ -199,4 +205,7 @@ void MainObject::AddBullet(int x,int y) {
 
 const std::vector<SDL_Rect>& MainObject::GetBullets() const {
     return bullets_;
+}
+const std::vector<SDL_Rect>& MainObject::GetChickens() const {
+    return chickens_;
 }

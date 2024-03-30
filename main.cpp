@@ -15,12 +15,11 @@ SDL_Texture* planeTexture = NULL;
 SDL_Texture* bulletTexture = NULL;
 SDL_Texture* chickenTexture = NULL;
 
-//void text();
 void text()
 {
     planeTexture = CommonFunction::LoadTexture("plane.png");
     bulletTexture = CommonFunction::LoadTexture("laser.png");
-    //chickenTexture = CommonFunction::LoadTexture("chicken.png");
+    chickenTexture = CommonFunction::LoadTexture("chicken.png");
 }
 void close()
 {
@@ -49,13 +48,11 @@ int main(int argc, char* argv[]) {
             }
             else if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_SPACE) {
-                    // Thêm đạn từ vị trí giữa máy bay
                     mainObject.AddBullet(plane.GetX() + 50, plane.GetY());
                 }
                 else
                 plane.Move(event);
             }
-
         }
 
         mainObject.MoveBullets();
@@ -63,9 +60,13 @@ int main(int argc, char* argv[]) {
 
         CommonFunction::RenderTexture(planeTexture, plane.GetX(), plane.GetY(), 100, 100);
 
-        const std::vector<SDL_Rect>& bullets = mainObject.GetBullets();
+        const vector<SDL_Rect>& bullets = mainObject.GetBullets();
         for (const auto& bullet : bullets) {
-            CommonFunction::RenderTexture(bulletTexture, bullet.x, bullet.y, WIDTH_MAIN_OBJECT, HEIGHT_MAIN_OBJECT);
+            CommonFunction::RenderTexture(bulletTexture, bullet.x, bullet.y, WIDTH_MAIN_OBJECT/10, HEIGHT_MAIN_OBJECT/2);
+        }
+        const vector<SDL_Rect>& chickens = mainObject.GetChickens();
+        for (const auto& chicken : chickens) {
+            CommonFunction::RenderTexture(chickenTexture, chicken.x, chicken.y, 50, 100);
         }
 
         CommonFunction::show();
