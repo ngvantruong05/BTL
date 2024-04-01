@@ -15,13 +15,15 @@ using namespace std;
 SDL_Texture* planeTexture = NULL;
 SDL_Texture* bulletTexture = NULL;
 SDL_Texture* chickenTexture = NULL;
+SDL_Texture* eggTexture = NULL;
 SDL_Texture* hpTexture = NULL;
 
 void text()
 {
     planeTexture = CommonFunction::LoadTexture("ok.png");
-    bulletTexture = CommonFunction::LoadTexture("laser.png");
+    bulletTexture = CommonFunction::LoadTexture("sphere.png");
     chickenTexture = CommonFunction::LoadTexture("chicken.png");
+    eggTexture = CommonFunction::LoadTexture("egg.png");
     hpTexture = CommonFunction::LoadTexture("hp.png");
 }
 void close()
@@ -61,21 +63,36 @@ int main(int argc, char* argv[]) {
 
         mainObject.MoveBullets();
         mainObject.MoveChickens();
+        mainObject.MoveEggs();
 
         CommonFunction::RenderTexture(planeTexture, plane.GetX(), plane.GetY(), 50, 100);
+
         const vector<SDL_Rect>& bullets = mainObject.GetBullets();
         for (const auto& bullet : bullets) {
             CommonFunction::RenderTexture(bulletTexture, bullet.x, bullet.y, WIDTH_MAIN_OBJECT/10, HEIGHT_MAIN_OBJECT/2);
         }
         const vector<SDL_Rect>& chickens = mainObject.GetChickens();
         for (const auto& chicken : chickens) {
-            CommonFunction::RenderTexture(chickenTexture, chicken.x, chicken.y, 50, 100);
+            CommonFunction::RenderTexture(chickenTexture, chicken.x, chicken.y, CHICKEN_WIDTH, CHICKEN_HEIGHT);
+        }
+        const vector<SDL_Rect>& eggs = mainObject.GetEggs();
+        for (const auto& egg : eggs) {
+            CommonFunction::RenderTexture(eggTexture, egg.x, egg.y, EGG_WIDTH, EGG_HEIGHT);
+        }
+
+        if (mainObject.Check(plane.GetX(), plane.GetY(), 50, 100))
+            hp--;
+        if (hp == 0)
+        {
+            CommonFunction::renderText("Game Over", (SCREEN_WIDTH - 150) / 2 , (SCREEN_HEIGHT - 50)/ 2);
+            CommonFunction::show();
+            SDL_Delay(3000);
+            break;
         }
         for (int i = 1; i <= hp; i++)
         {
             CommonFunction::RenderTexture(hpTexture,SCREEN_WIDTH - 30*i,0,30,30);
         }
-        CommonFunction::renderText("123", 0, 1);
 
         CommonFunction::show();
         SDL_Delay(10);

@@ -14,9 +14,13 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const int CHICKEN_WIDTH = 50;
 const int CHICKEN_HEIGHT = 100;
+const int EGG_WIDTH = 10;
+const int EGG_HEIGHT = 30;
+const int BOSS_WIDTH = 10;
+const int BOSS_HEIGHT = 30;
 const int WIDTH_MAIN_OBJECT = 5;
 const int HEIGHT_MAIN_OBJECT = 2;
-const int SPEED = 20;
+const int SPEED = 40;
 
 static SDL_Window* gWindow = NULL;
 
