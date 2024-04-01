@@ -1,17 +1,16 @@
+#include "Player.h"
+#include "Window.h"
 
-#include "BaseObject.h"
-#include "CommonFunction.h"
+Player::Player() : x(0), y(0), w(50), h(100) {}
 
-BaseObject::BaseObject() : x(0), y(0), width(50), height(100) {}
+Player::~Player() {}
 
-BaseObject::~BaseObject() {}
-
-void BaseObject::SetPosition(int x, int y) {
+void Player::SetPosition(int x, int y) {
     this->x = x;
     this->y = y;
 }
 
-void BaseObject::Move(SDL_Event& event) {
+void Player::Move(SDL_Event& event) {
     if (event.key.keysym.sym == SDLK_LEFT) {
         x -= SPEED;
     } else if (event.key.keysym.sym == SDLK_RIGHT) {
@@ -24,14 +23,13 @@ void BaseObject::Move(SDL_Event& event) {
 
     if (x < 0) {
         x = 0;
-    } else if (x + width > SCREEN_WIDTH) {
-        x = SCREEN_WIDTH - width;
+    } else if (x + w > SCREEN_WIDTH) {
+        x = SCREEN_WIDTH - w;
     }
 
     if (y < SCREEN_HEIGHT/2) {
         y = SCREEN_HEIGHT/2;
-    } else if (y + height > SCREEN_HEIGHT) {
-        y = SCREEN_HEIGHT - height;
+    } else if (y + h > SCREEN_HEIGHT) {
+        y = SCREEN_HEIGHT - h;
     }
 }
-

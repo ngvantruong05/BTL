@@ -32,14 +32,14 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="BaseObject.cpp" />
-		<Unit filename="BaseObject.h" />
 		<Unit filename="Boss.cpp" />
 		<Unit filename="Boss.h" />
-		<Unit filename="CommonFunction.cpp" />
-		<Unit filename="CommonFunction.h" />
-		<Unit filename="MainObject.cpp" />
-		<Unit filename="MainObject.h" />
+		<Unit filename="Figure.cpp" />
+		<Unit filename="Figure.h" />
+		<Unit filename="Player.cpp" />
+		<Unit filename="Player.h" />
+		<Unit filename="Window.cpp" />
+		<Unit filename="Window.h" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>

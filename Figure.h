@@ -1,14 +1,14 @@
+#ifndef FIGURE_H_
+#define FIGURE_H_
 
-#ifndef MAIN_OBJECT_H_
-#define MAIN_OBJECT_H_TH
-#include "CommonFunction.h"
-#include "BaseObject.h"
+#include "Window.h"
+#include "Player.h"
 #include <vector>
 
-class MainObject {
+class Figure {
 public:
-    MainObject();
-    ~MainObject();
+    Figure();
+    ~Figure();
     bool CheckCollision(const SDL_Rect& a, const SDL_Rect& b);
     bool Check(int x, int y, int w, int h);
 
@@ -31,9 +31,9 @@ private:
     int h;
     int number;
     int diem, demga, d;
-    vector<SDL_Rect> bullets_;
-    vector<SDL_Rect> chickens_;
-    vector<SDL_Rect> eggs_;
+    std::vector<SDL_Rect> bullets_;
+    std::vector<SDL_Rect> chickens_;
+    std::vector<SDL_Rect> eggs_;
 };
 
-#endif // MAIN_OBJECT_H_
+#endif // FIGURE_H_

@@ -1,25 +1,19 @@
 
-#ifndef BOSS_H_
-#define BOSS_H_TH
-#include "CommonFunction.h"
-#include "BaseObject.h"
-
-#include <vector>
+#ifndef BOSS_H
+#define BOSS_H
+#include "Window.h"
 
 class Boss {
 public:
     Boss();
     ~Boss();
-    bool CheckCollision(const SDL_Rect& a, const SDL_Rect& b);
-    void Boss::Move();
-    const std::vector<SDL_Rect>& GetBullets() const;
+
+    void move();
 
 private:
-    int x;
-    int y;
-    int w;
-    int h;
-    SDL_Rect* Boss_;
+    SDL_Rect rect;
+    int health;
+    int attackPower;
 };
 
-#endif // MAIN_OBJECT_H_
+#endif
