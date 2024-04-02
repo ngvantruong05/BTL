@@ -7,17 +7,19 @@
 #include <ctime>
 #include <cstdlib>
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 1000;
+const int SCREEN_HEIGHT = 700;
 const int CHICKEN_WIDTH = 50;
 const int CHICKEN_HEIGHT = 100;
 const int EGG_WIDTH = 10;
 const int EGG_HEIGHT = 30;
-const int BOSS_WIDTH = 10;
-const int BOSS_HEIGHT = 30;
+const int BOSS_WIDTH = 300;
+const int BOSS_HEIGHT = 300;
 const int WIDTH_MAIN_OBJECT = 5;
 const int HEIGHT_MAIN_OBJECT = 2;
+const int MAX_HEALTH = 3;
 const int SPEED = 40;
+const int BOSS_SPEED = 20;
 
 static SDL_Window* gWindow = NULL;
 

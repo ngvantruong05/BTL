@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Player.h"
 #include "Figure.h"
+#include "Boss.h"
 
 #define WIDTH_MAIN_OBJECT 80
 #define HEIGHT_MAIN_OBJECT 46
@@ -15,6 +16,7 @@ SDL_Texture* bulletTexture = NULL;
 SDL_Texture* chickenTexture = NULL;
 SDL_Texture* eggTexture = NULL;
 SDL_Texture* hpTexture = NULL;
+SDL_Texture* bossTexture = NULL;
 
 void text()
 {
@@ -23,6 +25,7 @@ void text()
     chickenTexture = Window::LoadTexture("chicken.png");
     eggTexture = Window::LoadTexture("egg.png");
     hpTexture = Window::LoadTexture("hp.png");
+    bossTexture = Window::LoadTexture("boss.png");
 }
 
 void close()
@@ -45,6 +48,7 @@ int main(int argc, char* argv[]) {
     Player plane;
     plane.SetPosition((SCREEN_WIDTH - 100) / 2, SCREEN_HEIGHT - 100);
     Figure figure;
+    Boss boss;
 
     bool quit = false;
     SDL_Event event;
@@ -80,6 +84,9 @@ int main(int argc, char* argv[]) {
         for (const auto& egg : eggs) {
             Window::RenderTexture(eggTexture, egg.x, egg.y, EGG_WIDTH, EGG_HEIGHT);
         }
+
+        SDL_Rect bossRect = boss.move();
+        //Window::RenderTexture(bossTexture,bossRect.x,bossRect.y,BOSS_WIDTH,BOSS_HEIGHT);
 
         if (figure.Check(plane.GetX(), plane.GetY(), 50, 100))
             hp--;

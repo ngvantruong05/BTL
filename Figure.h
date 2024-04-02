@@ -29,8 +29,9 @@ private:
     int y;
     int w;
     int h;
-    int number;
+    int number, bulletdelay;
     int diem, demga, d;
+    std::vector <int> healths_;
     std::vector<SDL_Rect> bullets_;
     std::vector<SDL_Rect> chickens_;
     std::vector<SDL_Rect> eggs_;

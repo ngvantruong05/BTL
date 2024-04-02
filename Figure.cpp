@@ -5,6 +5,7 @@ Figure::Figure() {
     diem = 0;
     demga = -20;
     number = 700;
+    bulletdelay = 0;
     d = 30;
     srand(time(NULL));
 }
@@ -12,6 +13,9 @@ Figure::Figure() {
 Figure::~Figure() {}
 
 void Figure::MoveBullets() {
+    if (bulletdelay > 0) {
+        bulletdelay--;
+    }
     for (int i = 0; i < bullets_.size(); ++i) {
         bullets_[i].y -= SPEED/10;
         if (bullets_[i].y + HEIGHT_MAIN_OBJECT < 0) {
@@ -27,6 +31,7 @@ void Figure::Movelever() {
        y = 0;
        SDL_Rect chicken = {0,0,0,0};
        chickens_.push_back(chicken);
+       healths_.push_back(MAX_HEALTH);
     }
     for (int i = 0; i < chickens_.size(); i++)
     {
@@ -46,50 +51,22 @@ void Figure::Movelever() {
             chickens_[i].w = 0;
         }
     }
-    for (int i = 0; i < chickens_.size(); i++){
-        SDL_Rect chicken = {chickens_[i].x,chickens_[i].y,CHICKEN_WIDTH,CHICKEN_HEIGHT};
-        for (int j = 0; j < bullets_.size(); j++) {
-            if (CheckCollision(chicken, bullets_[j])) {
-                chickens_.erase(chickens_.begin() + i);
-                bullets_.erase(bullets_.begin() + j);
-                diem ++;
-            }
-        }
-        if (rand() % 2000 < 5) {
-            Figure::AddEggBelowChicken(chickens_[i]);
-        }
-        if (chickens_[i].y > SCREEN_HEIGHT) {
-            chickens_.erase(chickens_.begin() + i);
-        }
-    }
     if (demga <= 600)
         demga ++;
 }
 
 void Figure::MoveChickens() {
     if (diem >= d){
-        if (chickens_.size()!=0&& number != 700)
-        {
-            for (int i = 0; i < chickens_.size(); ++i) {
+        if (chickens_.size()!=0&&number != 700)
+            for (int i = 0; i < chickens_.size(); i++){
                 chickens_[i].y += SPEED/40;
-                if (chickens_[i].y > SCREEN_HEIGHT) {
-                    chickens_.erase(chickens_.begin() + i);
-                }
-                for (int j = 0; j < bullets_.size(); j++) {
-                    if (CheckCollision(chickens_[i], bullets_[j])) {
-                        chickens_.erase(chickens_.begin() + i);
-                        bullets_.erase(bullets_.begin() + j);
-                        diem ++;
-                    }
-                }
-                if (rand() % 2000 < 5) {
-                    Figure::AddEggBelowChicken(chickens_[i]);
-                }
+                cout << chickens_[i].x << " " << chickens_[i].y << '\n';
             }
-        }else{
+        else
+        {
             Figure::Movelever();
             if (chickens_.size()==0&&demga >600)
-                d = 10000;
+                d = 100000;
             number = 700;
         }
     }
@@ -109,25 +86,34 @@ void Figure::MoveChickens() {
 
             if (!collided) {
                 chickens_.push_back(chickenRect);
+                healths_.push_back(MAX_HEALTH);
             }
+
             if (number > 200)
                 number -= 1;
         }
-        for (int i = 0; i < chickens_.size(); ++i) {
+        for (int i = 0; i < chickens_.size();i++)
             chickens_[i].y += SPEED/40;
-            if (chickens_[i].y > SCREEN_HEIGHT) {
-                chickens_.erase(chickens_.begin() + i);
-            }
-            for (int j = 0; j < bullets_.size(); j++) {
-                if (CheckCollision(chickens_[i], bullets_[j])) {
+    }
+    for (int i = 0; i < chickens_.size(); i++){
+        SDL_Rect chicken = {chickens_[i].x,chickens_[i].y,CHICKEN_WIDTH,CHICKEN_HEIGHT};
+        cout << chickens_[i].x << " " << chickens_[i].y << " aaa "<< '\n';
+        for (int j = 0; j < bullets_.size(); j++) {
+            if (CheckCollision(chicken, bullets_[j])) {
+                healths_[i] -= 1;
+                bullets_.erase(bullets_.begin() + j);
+                if (healths_[i] == 0){
                     chickens_.erase(chickens_.begin() + i);
-                    bullets_.erase(bullets_.begin() + j);
+                    healths_.erase(healths_.begin() + i);
                     diem ++;
                 }
             }
-            if (rand() % 2000 < 5) {
-                Figure::AddEggBelowChicken(chickens_[i]);
-            }
+        }
+        if (rand() % 2000 < chickens_.size()) {
+            Figure::AddEggBelowChicken(chickens_[i]);
+        }
+        if (chickens_[i].y > SCREEN_HEIGHT) {
+            chickens_.erase(chickens_.begin() + i);
         }
     }
 }
@@ -167,8 +153,12 @@ bool Figure::CheckCollision(const SDL_Rect& a, const SDL_Rect& b) {
 }
 
 void Figure::AddBullet(int x,int y) {
-    SDL_Rect bullet = {x - WIDTH_MAIN_OBJECT / 2, y - 10, WIDTH_MAIN_OBJECT / 2, HEIGHT_MAIN_OBJECT};
-    bullets_.push_back(bullet);
+    if (bulletdelay == 0)
+    {
+        SDL_Rect bullet = {x - WIDTH_MAIN_OBJECT / 2, y - 10, WIDTH_MAIN_OBJECT / 2, HEIGHT_MAIN_OBJECT};
+        bullets_.push_back(bullet);
+        bulletdelay = 20;
+    }
 }
 
 void Figure::AddEggBelowChicken(const SDL_Rect& chickenRect) {
