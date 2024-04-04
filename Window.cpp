@@ -8,13 +8,11 @@ namespace Window
             std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
             return false;
         }
-
         gWindow = SDL_CreateWindow("Bắn gà", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
         if (gWindow == NULL) {
             std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
             return false;
         }
-
         gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
         if (gRenderer == NULL) {
             std::cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
@@ -54,8 +52,7 @@ namespace Window
         SDL_RenderCopy(gRenderer, texture, nullptr, &destRect);
     }
 
-    void show()
-    {
+    void show(){
         SDL_RenderPresent(gRenderer);
         SDL_RenderClear(gRenderer);
         SDL_RenderCopy(gRenderer, backgroundTexture, nullptr, nullptr);
@@ -71,7 +68,7 @@ namespace Window
         TTF_Quit();
     }
 
-    void renderText(const std::string& text, int x, int y) {
+    void RenderText(const std::string& text, int x, int y) {
         SDL_Color textColor = {255, 0, 0};
         SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, text.c_str(), textColor);
         if (textSurface == NULL) {
@@ -88,5 +85,16 @@ namespace Window
 
             SDL_FreeSurface(textSurface);
         }
+    }
+    void RenderHPBar(int x, int y, int width, int height, int currentHP, int maxHP) {
+        SDL_Rect outlineRect = { x, y, width, height };
+        SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+        SDL_RenderDrawRect(gRenderer, &outlineRect);
+
+        int innerWidth = (currentHP * width) / maxHP;
+
+        SDL_Rect fillRect = { x + 1, y + 1, innerWidth - 1, height - 1 };
+        SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+        SDL_RenderFillRect(gRenderer, &fillRect);
     }
 }

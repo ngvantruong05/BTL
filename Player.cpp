@@ -20,7 +20,6 @@ void Player::Move(SDL_Event& event) {
     } else if (event.key.keysym.sym == SDLK_DOWN) {
         y += SPEED/2;
     }
-
     if (x < 0) {
         x = 0;
     } else if (x + w > SCREEN_WIDTH) {

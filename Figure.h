@@ -23,6 +23,7 @@ public:
     const std::vector<SDL_Rect>& GetBullets() const;
     const std::vector<SDL_Rect>& GetChickens() const;
     const std::vector<SDL_Rect>& GetEggs() const;
+    const std::vector<int>& Gethealth() const;
 
 private:
     int x;

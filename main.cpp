@@ -77,22 +77,26 @@ int main(int argc, char* argv[]) {
             Window::RenderTexture(bulletTexture, bullet.x, bullet.y, WIDTH_MAIN_OBJECT / 10, HEIGHT_MAIN_OBJECT / 2);
         }
         const std::vector<SDL_Rect>& chickens = figure.GetChickens();
-        for (const auto& chicken : chickens) {
-            Window::RenderTexture(chickenTexture, chicken.x, chicken.y, CHICKEN_WIDTH, CHICKEN_HEIGHT);
+        const std::vector<int>& health = figure.Gethealth();
+        for (int i = 0; i < chickens.size();i++) {
+            Window::RenderTexture(chickenTexture, chickens[i].x, chickens[i].y, CHICKEN_WIDTH, CHICKEN_HEIGHT);
+            Window::RenderHPBar(chickens[i].x + CHICKEN_WIDTH/4, chickens[i].y + 5 + CHICKEN_HEIGHT, CHICKEN_WIDTH/2, 2,health[i],MAX_HEALTH);
         }
         const std::vector<SDL_Rect>& eggs = figure.GetEggs();
         for (const auto& egg : eggs) {
             Window::RenderTexture(eggTexture, egg.x, egg.y, EGG_WIDTH, EGG_HEIGHT);
         }
-
-        SDL_Rect bossRect = boss.move();
-        //Window::RenderTexture(bossTexture,bossRect.x,bossRect.y,BOSS_WIDTH,BOSS_HEIGHT);
+        boss.Move();
+        SDL_Rect bossRect = boss.GetBoss();
+        Window::RenderTexture(bossTexture,bossRect.x,bossRect.y,BOSS_WIDTH,BOSS_HEIGHT);
+        int bosshealth = boss.Health();
+        Window::RenderHPBar(100,10,SCREEN_WIDTH-200,30,bosshealth,BOSS_HEALTH);
 
         if (figure.Check(plane.GetX(), plane.GetY(), 50, 100))
             hp--;
         if (hp == 0)
         {
-            Window::renderText("Game Over", (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
+            Window::RenderText("Game Over", (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
             Window::show();
             SDL_Delay(3000);
             break;

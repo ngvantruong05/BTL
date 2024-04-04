@@ -6,7 +6,7 @@ Figure::Figure() {
     demga = -20;
     number = 700;
     bulletdelay = 0;
-    d = 30;
+    d = 5;
     srand(time(NULL));
 }
 
@@ -18,7 +18,7 @@ void Figure::MoveBullets() {
     }
     for (int i = 0; i < bullets_.size(); ++i) {
         bullets_[i].y -= SPEED/10;
-        if (bullets_[i].y + HEIGHT_MAIN_OBJECT < 0) {
+        if (bullets_[i].y + HEIGHT_BULLET < 0) {
             bullets_.erase(bullets_.begin() + i);
         }
     }
@@ -59,7 +59,7 @@ void Figure::MoveChickens() {
     if (diem >= d){
         if (chickens_.size()!=0&&number != 700)
             for (int i = 0; i < chickens_.size(); i++){
-                chickens_[i].y += SPEED/40;
+                chickens_[i].y += SPEED/20;
                 cout << chickens_[i].x << " " << chickens_[i].y << '\n';
             }
         else
@@ -109,11 +109,12 @@ void Figure::MoveChickens() {
                 }
             }
         }
-        if (rand() % 2000 < chickens_.size()) {
+        if (rand() % 20000 < chickens_.size()) {
             Figure::AddEggBelowChicken(chickens_[i]);
         }
         if (chickens_[i].y > SCREEN_HEIGHT) {
             chickens_.erase(chickens_.begin() + i);
+            healths_.erase(healths_.begin() + i);
         }
     }
 }
@@ -129,11 +130,12 @@ void Figure::MoveEggs() {
 
 bool Figure::Check(int x, int y,int w, int h)
 {
-    Window::renderText(to_string(diem), 0, 1);
+    Window::RenderText(to_string(diem), 0, 1);
     SDL_Rect planeR = {x,y,w,h};
     for (int i = 0; i < chickens_.size(); i++) {
         if (CheckCollision(chickens_[i], planeR)) {
             chickens_.erase(chickens_.begin() + i);
+            healths_.erase(healths_.begin() + i);
             return true;
         }
     }
@@ -155,9 +157,16 @@ bool Figure::CheckCollision(const SDL_Rect& a, const SDL_Rect& b) {
 void Figure::AddBullet(int x,int y) {
     if (bulletdelay == 0)
     {
-        SDL_Rect bullet = {x - WIDTH_MAIN_OBJECT / 2, y - 10, WIDTH_MAIN_OBJECT / 2, HEIGHT_MAIN_OBJECT};
-        bullets_.push_back(bullet);
+        int bulletOffset = WIDTH_BULLET / 6;
+        int numBullets = 3;
+        for (int i = 0; i < numBullets; ++i) {
+            SDL_Rect bullet = {x + (i - (numBullets - 1) / 2) * bulletOffset, y - 10, WIDTH_BULLET / 2, HEIGHT_BULLET};
+            bullets_.push_back(bullet);
+        }
         bulletdelay = 20;
+//        SDL_Rect bullet = {x - WIDTH_BULLET / 2, y - 10, WIDTH_BULLET / 2, HEIGHT_BULLET};
+//        bullets_.push_back(bullet);
+//        bulletdelay = 20;
     }
 }
 
@@ -171,11 +180,12 @@ void Figure::AddEggBelowChicken(const SDL_Rect& chickenRect) {
 const std::vector<SDL_Rect>& Figure::GetBullets() const {
     return bullets_;
 }
-
 const std::vector<SDL_Rect>& Figure::GetChickens() const {
     return chickens_;
 }
-
 const std::vector<SDL_Rect>& Figure::GetEggs() const {
     return eggs_;
+}
+const std::vector<int>& Figure::Gethealth() const {
+    return healths_;
 }

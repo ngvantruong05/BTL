@@ -8,8 +8,10 @@ public:
     Boss();
     ~Boss();
 
-    SDL_Rect move();
+    SDL_Rect GetBoss();
+    void Move();
     SDL_Rect HealthBar();
+    int Health();
 
 private:
     SDL_Rect rect;

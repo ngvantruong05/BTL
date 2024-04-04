@@ -15,11 +15,12 @@ const int EGG_WIDTH = 10;
 const int EGG_HEIGHT = 30;
 const int BOSS_WIDTH = 300;
 const int BOSS_HEIGHT = 300;
-const int WIDTH_MAIN_OBJECT = 5;
-const int HEIGHT_MAIN_OBJECT = 2;
+const int BOSS_HEALTH = 100;
+const int WIDTH_BULLET = 5;
+const int HEIGHT_BULLET = 2;
 const int MAX_HEALTH = 3;
 const int SPEED = 40;
-const int BOSS_SPEED = 20;
+const int BOSS_SPEED = 10;
 
 static SDL_Window* gWindow = NULL;
 
@@ -35,6 +36,7 @@ namespace Window
     void RenderTextures(SDL_Texture* texture, int x, int y, int w, int h);
     void show();
     void close();
-    void renderText(const std::string& text, int x, int y);
+    void RenderText(const std::string& text, int x, int y);
+    void RenderHPBar(int x, int y, int width, int height, int currentHP, int maxHP);
 }
 #endif
