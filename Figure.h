@@ -30,7 +30,7 @@ private:
     int y;
     int w;
     int h;
-    int number, bulletdelay;
+    int number, bulletdelay,numBullets;
     int diem, demga, d;
     std::vector <int> healths_;
     std::vector<SDL_Rect> bullets_;

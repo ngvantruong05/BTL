@@ -8,9 +8,6 @@
 #include "Figure.h"
 #include "Boss.h"
 
-#define WIDTH_MAIN_OBJECT 80
-#define HEIGHT_MAIN_OBJECT 46
-
 SDL_Texture* planeTexture = NULL;
 SDL_Texture* bulletTexture = NULL;
 SDL_Texture* chickenTexture = NULL;
@@ -59,7 +56,7 @@ int main(int argc, char* argv[]) {
             }
             else if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_SPACE) {
-                    figure.AddBullet(plane.GetX() + 25, plane.GetY());
+                    figure.AddBullet(plane.GetX(), plane.GetY());
                 }
                 else
                     plane.Move(event);
@@ -74,7 +71,7 @@ int main(int argc, char* argv[]) {
 
         const std::vector<SDL_Rect>& bullets = figure.GetBullets();
         for (const auto& bullet : bullets) {
-            Window::RenderTexture(bulletTexture, bullet.x, bullet.y, WIDTH_MAIN_OBJECT / 10, HEIGHT_MAIN_OBJECT / 2);
+            Window::RenderTexture(bulletTexture, bullet.x, bullet.y,  BULLET_WIDTH, BULLET_HEIGHT);
         }
         const std::vector<SDL_Rect>& chickens = figure.GetChickens();
         const std::vector<int>& health = figure.Gethealth();

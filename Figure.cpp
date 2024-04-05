@@ -6,6 +6,7 @@ Figure::Figure() {
     demga = -20;
     number = 700;
     bulletdelay = 0;
+    numBullets = 2;
     d = 5;
     srand(time(NULL));
 }
@@ -18,7 +19,7 @@ void Figure::MoveBullets() {
     }
     for (int i = 0; i < bullets_.size(); ++i) {
         bullets_[i].y -= SPEED/10;
-        if (bullets_[i].y + HEIGHT_BULLET < 0) {
+        if (bullets_[i].y + BULLET_HEIGHT < 0) {
             bullets_.erase(bullets_.begin() + i);
         }
     }
@@ -157,16 +158,17 @@ bool Figure::CheckCollision(const SDL_Rect& a, const SDL_Rect& b) {
 void Figure::AddBullet(int x,int y) {
     if (bulletdelay == 0)
     {
-        int bulletOffset = WIDTH_BULLET / 6;
-        int numBullets = 3;
-        for (int i = 0; i < numBullets; ++i) {
-            SDL_Rect bullet = {x + (i - (numBullets - 1) / 2) * bulletOffset, y - 10, WIDTH_BULLET / 2, HEIGHT_BULLET};
+        int bulletOffset = 50 / (numBullets+1);
+        if (numBullets == 1){
+            SDL_Rect bullet = {x + bulletOffset - BULLET_WIDTH / 2, y - 10, BULLET_WIDTH, BULLET_HEIGHT};
             bullets_.push_back(bullet);
         }
+        else
+            for (int i = 1; i <= numBullets; ++i) {
+                SDL_Rect bullet = {x + i * bulletOffset - BULLET_WIDTH / 2, y - 10, BULLET_WIDTH, BULLET_HEIGHT};
+                bullets_.push_back(bullet);
+            }
         bulletdelay = 20;
-//        SDL_Rect bullet = {x - WIDTH_BULLET / 2, y - 10, WIDTH_BULLET / 2, HEIGHT_BULLET};
-//        bullets_.push_back(bullet);
-//        bulletdelay = 20;
     }
 }
 
