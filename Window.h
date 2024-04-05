@@ -20,7 +20,7 @@ const int BULLET_WIDTH = 8;
 const int BULLET_HEIGHT = 20;
 const int MAX_HEALTH = 3;
 const int SPEED = 40;
-const int BOSS_SPEED = 10;
+const int BOSS_SPEED = 5;
 
 static SDL_Window* gWindow = NULL;
 

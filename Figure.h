@@ -9,8 +9,11 @@ class Figure {
 public:
     Figure();
     ~Figure();
+    int GetDiem() const {return diem;}
+    int SetDiem(int diem_){ diem = diem_; }
     bool CheckCollision(const SDL_Rect& a, const SDL_Rect& b);
     bool Check(int x, int y, int w, int h);
+    int CheckBoss(SDL_Rect& bossRect);
 
     void MoveBullets();
     void MoveChickens();
@@ -18,7 +21,7 @@ public:
     void MoveEggs();
 
     void AddBullet(int x, int y);
-    void AddEggBelowChicken(const SDL_Rect& chickenRect);
+    void AddEgg(const SDL_Rect& chickenRect);
 
     const std::vector<SDL_Rect>& GetBullets() const;
     const std::vector<SDL_Rect>& GetChickens() const;
@@ -26,10 +29,7 @@ public:
     const std::vector<int>& Gethealth() const;
 
 private:
-    int x;
-    int y;
-    int w;
-    int h;
+    int x, y, w, h;
     int number, bulletdelay,numBullets;
     int diem, demga, d;
     std::vector <int> healths_;

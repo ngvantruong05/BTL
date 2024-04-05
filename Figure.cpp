@@ -6,7 +6,7 @@ Figure::Figure() {
     demga = -20;
     number = 700;
     bulletdelay = 0;
-    numBullets = 2;
+    numBullets = 3;
     d = 5;
     srand(time(NULL));
 }
@@ -60,8 +60,7 @@ void Figure::MoveChickens() {
     if (diem >= d){
         if (chickens_.size()!=0&&number != 700)
             for (int i = 0; i < chickens_.size(); i++){
-                chickens_[i].y += SPEED/20;
-                cout << chickens_[i].x << " " << chickens_[i].y << '\n';
+                chickens_[i].y += SPEED/10;
             }
         else
         {
@@ -76,7 +75,6 @@ void Figure::MoveChickens() {
             int x = rand() % (SCREEN_WIDTH - CHICKEN_WIDTH);
             int y = - 100;
             SDL_Rect chickenRect = {x, y, CHICKEN_WIDTH, CHICKEN_HEIGHT};
-
             bool collided = false;
             for (const auto& existingChicken : chickens_) {
                 if (CheckCollision(chickenRect, existingChicken)) {
@@ -84,12 +82,10 @@ void Figure::MoveChickens() {
                     break;
                 }
             }
-
             if (!collided) {
                 chickens_.push_back(chickenRect);
                 healths_.push_back(MAX_HEALTH);
             }
-
             if (number > 200)
                 number -= 1;
         }
@@ -98,7 +94,6 @@ void Figure::MoveChickens() {
     }
     for (int i = 0; i < chickens_.size(); i++){
         SDL_Rect chicken = {chickens_[i].x,chickens_[i].y,CHICKEN_WIDTH,CHICKEN_HEIGHT};
-        cout << chickens_[i].x << " " << chickens_[i].y << " aaa "<< '\n';
         for (int j = 0; j < bullets_.size(); j++) {
             if (CheckCollision(chicken, bullets_[j])) {
                 healths_[i] -= 1;
@@ -110,8 +105,8 @@ void Figure::MoveChickens() {
                 }
             }
         }
-        if (rand() % 20000 < chickens_.size()) {
-            Figure::AddEggBelowChicken(chickens_[i]);
+        if (rand() % 5000 < chickens_.size()) {
+            Figure::AddEgg(chickens_[i]);
         }
         if (chickens_[i].y > SCREEN_HEIGHT) {
             chickens_.erase(chickens_.begin() + i);
@@ -148,6 +143,16 @@ bool Figure::Check(int x, int y,int w, int h)
     }
     return false;
 }
+int Figure::CheckBoss(SDL_Rect& bossRect){
+    int sum = 0;
+    for (int i = 0; i < bullets_.size(); i++) {
+        if (CheckCollision(bossRect, bullets_[i])) {
+            sum ++;
+            bullets_.erase(bullets_.begin() + i);
+        }
+    }
+    return sum;
+}
 
 bool Figure::CheckCollision(const SDL_Rect& a, const SDL_Rect& b) {
     bool xOverlap = (a.x < b.x + b.w) && (a.x + a.w > b.x);
@@ -171,8 +176,7 @@ void Figure::AddBullet(int x,int y) {
         bulletdelay = 20;
     }
 }
-
-void Figure::AddEggBelowChicken(const SDL_Rect& chickenRect) {
+void Figure::AddEgg(const SDL_Rect& chickenRect) {
     int eggX = chickenRect.x + (CHICKEN_WIDTH - EGG_WIDTH) / 2;
     int eggY = chickenRect.y + CHICKEN_HEIGHT;
     SDL_Rect eggRect = {eggX, eggY, EGG_WIDTH, EGG_HEIGHT};

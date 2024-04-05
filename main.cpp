@@ -14,7 +14,7 @@ SDL_Texture* chickenTexture = NULL;
 SDL_Texture* eggTexture = NULL;
 SDL_Texture* hpTexture = NULL;
 SDL_Texture* bossTexture = NULL;
-
+int bossHealth = 0, lever = 1;
 void text()
 {
     planeTexture = Window::LoadTexture("ok.png");
@@ -83,11 +83,24 @@ int main(int argc, char* argv[]) {
         for (const auto& egg : eggs) {
             Window::RenderTexture(eggTexture, egg.x, egg.y, EGG_WIDTH, EGG_HEIGHT);
         }
-        boss.Move();
-        SDL_Rect bossRect = boss.GetBoss();
-        Window::RenderTexture(bossTexture,bossRect.x,bossRect.y,BOSS_WIDTH,BOSS_HEIGHT);
-        int bosshealth = boss.Health();
-        Window::RenderHPBar(100,10,SCREEN_WIDTH-200,30,bosshealth,BOSS_HEALTH);
+        if (figure.GetDiem() % 30 == 0 && figure.GetDiem() == 0)
+        {
+            bossHealth = BOSS_HEALTH * lever;
+        }
+        if (bossHealth > 0){
+            boss.Move();
+            SDL_Rect bossRect = boss.GetBoss();
+            SDL_Rect planeRect = {plane.GetX(), plane.GetY(), 50, 100};
+            if (figure.CheckCollision(bossRect,planeRect))
+                hp--;
+            bossHealth -= figure.CheckBoss(bossRect);
+            if (bossHealth <= 0){
+                figure.SetDiem(figure.GetDiem() + 30 * lever);
+                lever ++;
+            }
+            Window::RenderHPBar(100,10,SCREEN_WIDTH-200,30,bossHealth,BOSS_HEALTH * lever);
+            Window::RenderTexture(bossTexture,bossRect.x,bossRect.y,BOSS_WIDTH,BOSS_HEIGHT);
+        }
 
         if (figure.Check(plane.GetX(), plane.GetY(), 50, 100))
             hp--;
