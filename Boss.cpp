@@ -1,5 +1,8 @@
+#include <bits/stdc++.h>
+#include <algorithm>
 #include "Boss.h"
 #include <SDL_image.h>
+#include "Figure.h"
 
 Boss::Boss() {
     srand(time(NULL));
@@ -14,42 +17,19 @@ Boss::Boss() {
 Boss::~Boss() {}
 
 void Boss::Move() {
-    int direction = rand() % 4;
-    // Di chuyển boss dựa trên giá trị ngẫu nhiên được tạo ra
-    switch (direction) {
-        case 0: // Di chuyển boss sang phải
-            rect.x += BOSS_SPEED;
-            break;
-        case 1: // Di chuyển boss sang trái
-            rect.x -= BOSS_SPEED;
-            break;
-        case 2: // Di chuyển boss xuống
-            rect.y += BOSS_SPEED;
-            break;
-        case 3: // Di chuyển boss lên
-            rect.y -= BOSS_SPEED;
-            break;
-        default:
-            break;
+    rect.x += velocityX;
+    rect.y += velocityY;
+    if (rect.x <= 0 || rect.x + BOSS_WIDTH >= SCREEN_WIDTH) {
+        rect.x = std::max(0,rect.x);
+        rect.x = std::min(rect.x, SCREEN_WIDTH - BOSS_WIDTH);
+        velocityX = rand() % 3 - 1; // -1, 0, hoặc 1
+        velocityY = rand() % 3 - 1; // -1, 0, hoặc 1
     }
-//    if (rand() % 2 == 0){
-//        rect.x += BOSS_SPEED;
-//    }
-//    else
-//        rect.x -= BOSS_SPEED;
-//    if (rand() % 2 == 0){
-//        rect.y += BOSS_SPEED;
-//    }
-//    else
-//        rect.y -= BOSS_SPEED;
-    if (rect.x < 0)
-        rect.x = 0;
-    else if (rect.x + BOSS_WIDTH > SCREEN_WIDTH)
-        rect.x = SCREEN_WIDTH - BOSS_WIDTH;
-    if (rect.y < 0)
-        rect.y = 0;
-    else if (rect.y + BOSS_HEIGHT > SCREEN_HEIGHT) {
-        rect.y = SCREEN_HEIGHT - BOSS_HEIGHT;
+    if (rect.y <= 30 || rect.y + BOSS_HEIGHT >= SCREEN_HEIGHT) {
+        rect.y = std::max(30,rect.y);
+        rect.y = std::min(rect.y, SCREEN_HEIGHT - BOSS_HEIGHT);
+        velocityX = rand() % 3 - 1; // -1, 0, hoặc 1
+        velocityY = rand() % 3 - 1; // -1, 0, hoặc 1
     }
 }
 

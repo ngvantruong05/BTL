@@ -86,15 +86,51 @@ namespace Window
             SDL_FreeSurface(textSurface);
         }
     }
-    void RenderHPBar(int x, int y, int width, int height, int currentHP, int maxHP) {
-        SDL_Rect outlineRect = { x, y, width, height };
-        SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+    void RenderBloodBar(int x, int y, int width, int height, int currentHP, int maxHP) {
+        SDL_Rect outlineRect = { x, y, width, height};
+        SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
         SDL_RenderDrawRect(gRenderer, &outlineRect);
 
         int innerWidth = (currentHP * width) / maxHP;
 
         SDL_Rect fillRect = { x + 1, y + 1, innerWidth - 1, height - 1 };
-        SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+        SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 255);
         SDL_RenderFillRect(gRenderer, &fillRect);
+    }
+    void RenderItem(const std::string& text, int x, int y, int number){
+        SDL_Color textColor;
+        SDL_Color backgroundColor;
+        if (number == 1){
+            textColor = {255, 255, 0, 255};
+            backgroundColor = {255, 0, 0, 255};
+        }   else    if (number == 2){
+            textColor = {255, 0, 0, 255};
+            backgroundColor = {0, 255, 0, 255};
+        }   else{
+            textColor = {0, 0, 0, 255};
+            backgroundColor = {255, 255, 255, 255};
+        }
+
+        SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, text.c_str(), textColor);
+        if (textSurface == NULL) {
+            std::cerr << "Unable to render text surface! SDL_ttf Error: " << TTF_GetError() << std::endl;
+            return;
+        }
+
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+        if (textTexture == NULL) {
+            std::cerr << "Unable to create texture from rendered text! SDL Error: " << SDL_GetError() << std::endl;
+            SDL_FreeSurface(textSurface);
+            return;
+        }
+
+        SDL_Rect backgroundRect = {x, y, textSurface->w, textSurface->h};
+        SDL_SetRenderDrawColor(gRenderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+        SDL_RenderFillRect(gRenderer, &backgroundRect);
+
+        SDL_Rect renderRect = {x, y, textSurface->w, textSurface->h};
+        SDL_RenderCopy(gRenderer, textTexture, NULL, &renderRect);
+
+        SDL_DestroyTexture(textTexture);
     }
 }

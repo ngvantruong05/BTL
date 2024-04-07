@@ -1,11 +1,12 @@
 #include "Figure.h"
+#include "Window.h"
 
 using namespace std;
 Figure::Figure() {
-    diem = 0;
+    score = 0;
     demga = -20;
     number = 700;
-    bulletdelay = 0;
+    bulletDelay = 0;
     numBullets = 3;
     d = 5;
     srand(time(NULL));
@@ -14,8 +15,8 @@ Figure::Figure() {
 Figure::~Figure() {}
 
 void Figure::MoveBullets() {
-    if (bulletdelay > 0) {
-        bulletdelay--;
+    if (bulletDelay > 0) {
+        bulletDelay--;
     }
     for (int i = 0; i < bullets_.size(); ++i) {
         bullets_[i].y -= SPEED/10;
@@ -26,16 +27,14 @@ void Figure::MoveBullets() {
 }
 
 void Figure::Movelever() {
-    if (demga % 50 == 0)
-    {
+    if (demga % 50 == 0){
        x = 0;
        y = 0;
        SDL_Rect chicken = {0,0,0,0};
        chickens_.push_back(chicken);
        healths_.push_back(MAX_HEALTH);
     }
-    for (int i = 0; i < chickens_.size(); i++)
-    {
+    for (int i = 0; i < chickens_.size(); i++){
         if (chickens_[i].w == 0)
             chickens_[i].x += SPEED/20;
         else
@@ -57,13 +56,12 @@ void Figure::Movelever() {
 }
 
 void Figure::MoveChickens() {
-    if (diem >= d){
+    if (score >= d){
         if (chickens_.size()!=0&&number != 700)
             for (int i = 0; i < chickens_.size(); i++){
-                chickens_[i].y += SPEED/10;
+                chickens_[i].y += SPEED/40;
             }
-        else
-        {
+        else{
             Figure::Movelever();
             if (chickens_.size()==0&&demga >600)
                 d = 100000;
@@ -99,14 +97,24 @@ void Figure::MoveChickens() {
                 healths_[i] -= 1;
                 bullets_.erase(bullets_.begin() + j);
                 if (healths_[i] == 0){
+                    int t = rand() % 3 + 1;
+                    string s;
+                    if ( t == 1)
+                        s = "HP";
+                    else    if (t == 2)
+                        s = "AMMO";
+                    else    if (t == 3)
+                        s = "SHIELD";
+                    Window::RenderItem(s, chickens_[i].x, chickens_[i].y, t);
                     chickens_.erase(chickens_.begin() + i);
                     healths_.erase(healths_.begin() + i);
-                    diem ++;
+
+                    score ++;
                 }
             }
         }
         if (rand() % 5000 < chickens_.size()) {
-            Figure::AddEgg(chickens_[i]);
+            Figure::AddEgg({chickens_[i].x + (CHICKEN_WIDTH - EGG_WIDTH) / 2,chickens_[i].y + CHICKEN_HEIGHT,chickens_[i].w,chickens_[i].h});
         }
         if (chickens_[i].y > SCREEN_HEIGHT) {
             chickens_.erase(chickens_.begin() + i);
@@ -126,7 +134,7 @@ void Figure::MoveEggs() {
 
 bool Figure::Check(int x, int y,int w, int h)
 {
-    Window::RenderText(to_string(diem), 0, 1);
+    Window::RenderText(to_string(score), 0, 1);
     SDL_Rect planeR = {x,y,w,h};
     for (int i = 0; i < chickens_.size(); i++) {
         if (CheckCollision(chickens_[i], planeR)) {
@@ -161,7 +169,7 @@ bool Figure::CheckCollision(const SDL_Rect& a, const SDL_Rect& b) {
 }
 
 void Figure::AddBullet(int x,int y) {
-    if (bulletdelay == 0)
+    if (bulletDelay == 0)
     {
         int bulletOffset = 50 / (numBullets+1);
         if (numBullets == 1){
@@ -173,12 +181,12 @@ void Figure::AddBullet(int x,int y) {
                 SDL_Rect bullet = {x + i * bulletOffset - BULLET_WIDTH / 2, y - 10, BULLET_WIDTH, BULLET_HEIGHT};
                 bullets_.push_back(bullet);
             }
-        bulletdelay = 20;
+        bulletDelay = 20;
     }
 }
 void Figure::AddEgg(const SDL_Rect& chickenRect) {
-    int eggX = chickenRect.x + (CHICKEN_WIDTH - EGG_WIDTH) / 2;
-    int eggY = chickenRect.y + CHICKEN_HEIGHT;
+    int eggX = chickenRect.x ;
+    int eggY = chickenRect.y ;
     SDL_Rect eggRect = {eggX, eggY, EGG_WIDTH, EGG_HEIGHT};
     eggs_.push_back(eggRect);
 }

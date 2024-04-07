@@ -37,6 +37,7 @@ namespace Window
     void show();
     void close();
     void RenderText(const std::string& text, int x, int y);
-    void RenderHPBar(int x, int y, int width, int height, int currentHP, int maxHP);
+    void RenderBloodBar(int x, int y, int width, int height, int currentHP, int maxHP);
+    void RenderItem(const std::string& text, int x, int y, int number);
 }
 #endif

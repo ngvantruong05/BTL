@@ -9,8 +9,8 @@ class Figure {
 public:
     Figure();
     ~Figure();
-    int GetDiem() const {return diem;}
-    int SetDiem(int diem_){ diem = diem_; }
+    int GetScore() const {return score;}
+    int SetScore(int score_){ score = score_; }
     bool CheckCollision(const SDL_Rect& a, const SDL_Rect& b);
     bool Check(int x, int y, int w, int h);
     int CheckBoss(SDL_Rect& bossRect);
@@ -30,8 +30,8 @@ public:
 
 private:
     int x, y, w, h;
-    int number, bulletdelay,numBullets;
-    int diem, demga, d;
+    int number, bulletDelay,numBullets;
+    int score, demga, d;
     std::vector <int> healths_;
     std::vector<SDL_Rect> bullets_;
     std::vector<SDL_Rect> chickens_;

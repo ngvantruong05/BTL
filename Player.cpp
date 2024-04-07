@@ -26,8 +26,8 @@ void Player::Move(SDL_Event& event) {
         x = SCREEN_WIDTH - w;
     }
 
-    if (y < SCREEN_HEIGHT/2) {
-        y = SCREEN_HEIGHT/2;
+    if (y < 0) {
+        y = 0;
     } else if (y + h > SCREEN_HEIGHT) {
         y = SCREEN_HEIGHT - h;
     }
