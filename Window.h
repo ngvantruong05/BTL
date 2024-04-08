@@ -15,10 +15,10 @@ const int EGG_WIDTH = 10;
 const int EGG_HEIGHT = 30;
 const int BOSS_WIDTH = 300;
 const int BOSS_HEIGHT = 300;
-const int BOSS_HEALTH = 100;
+const int BOSS_HEALTH = 50;
 const int BULLET_WIDTH = 8;
 const int BULLET_HEIGHT = 20;
-const int MAX_HEALTH = 3;
+const int MAX_HEALTH = 1;
 const int SPEED = 40;
 const int BOSS_SPEED = 5;
 

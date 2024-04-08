@@ -11,7 +11,10 @@ public:
     ~Figure();
     int GetScore() const {return score;}
     int Getdemga() const {return demga;}
+    int GetNumBullets() const {return numBullets;}
     void SetScore(int score_){ score = score_; }
+    void SetLevel(int level_){ level = level_; }
+    void SetDemga(int demga_){ demga = demga_; }
     void SetNumBullets(int numBullets_){ numBullets = numBullets_; }
 
     bool CheckCollision(const SDL_Rect& a, const SDL_Rect& b);
@@ -40,7 +43,7 @@ public:
 private:
     int x, y, w, h;
     int number, bulletDelay,numBullets;
-    int score, demga, d;
+    int score, demga, d, level;
     std::vector <int> healths_;
     std::vector<SDL_Rect> bullets_;
     std::vector<SDL_Rect> chickens_;

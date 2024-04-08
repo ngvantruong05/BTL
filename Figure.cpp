@@ -9,7 +9,8 @@ Figure::Figure() {
     demga = -20;
     number = 700;
     bulletDelay = 0;
-    numBullets = 1;
+    numBullets = 5;
+    level = 1;
     d = 5;
     srand(time(NULL));
 }
@@ -42,7 +43,7 @@ void Figure::MoveChickens2() {
        y = 0;
        SDL_Rect chicken = {0,0,0,0};
        chickens_.push_back(chicken);
-       healths_.push_back(MAX_HEALTH);
+       healths_.push_back(MAX_HEALTH * level);
     }
     for (int i = 0; i < chickens_.size(); i++){
         if (chickens_[i].w == 0)
@@ -50,13 +51,18 @@ void Figure::MoveChickens2() {
         else
             chickens_[i].x -= SPEED/20;
         if (chickens_[i].x >= SCREEN_WIDTH){
-            if (chickens_[i].y > 300)
+            if (chickens_[i].y > 300){
+                chickens_.erase(chickens_.begin() + i);
+                eggs_.erase(eggs_.begin() + i);
                 continue;
+            }
             chickens_[i].y += 120;
             chickens_[i].w = 1;
         }else   if (chickens_[i].x <= -50){
-            if (chickens_[i].y > 300)
+            if (chickens_[i].y > 300){
+                chickens_.erase(chickens_.begin() + i);
                 continue;
+            }
             chickens_[i].y += 120;
             chickens_[i].w = 0;
         }
@@ -66,19 +72,6 @@ void Figure::MoveChickens2() {
 }
 
 void Figure::MoveChickens1() {
-//    if (score >= d){
-//        if (chickens_.size()!=0&&number != 700)
-//            for (int i = 0; i < chickens_.size(); i++){
-//                chickens_[i].y += SPEED/40;
-//            }
-//        else{
-//            Figure::Movelever();
-//            if (chickens_.size()==0&&demga >600)
-//                d = 100000;
-//            number = 700;
-//        }
-//    }
-//    else{
     if (rand() % number < 5) {
         int x = rand() % (SCREEN_WIDTH - CHICKEN_WIDTH);
         int y = - 100;
@@ -92,7 +85,7 @@ void Figure::MoveChickens1() {
         }
         if (!collided) {
             chickens_.push_back(chickenRect);
-            healths_.push_back(MAX_HEALTH);
+            healths_.push_back(MAX_HEALTH * level);
         }
         if (number > 100)
             number -= 1;
@@ -105,9 +98,12 @@ void Figure::CheckFigure(){
         SDL_Rect chicken = {chickens_[i].x,chickens_[i].y,CHICKEN_WIDTH,CHICKEN_HEIGHT};
         for (int j = 0; j < bullets_.size(); j++) {
             if (CheckCollision(chicken, bullets_[j])) {
-                healths_[i] -= 1;
+//                if (numBullets > 5)
+//                    healths_[i] -= 5;
+//                else
+                    healths_[i] -= 1;
                 bullets_.erase(bullets_.begin() + j);
-                if (healths_[i] == 0){
+                if (healths_[i] <= 0){
                     if (rand() % 100 < 100){
                         int t = rand() % 3 + 1;
                         string s;
@@ -121,7 +117,7 @@ void Figure::CheckFigure(){
                     }
                     chickens_.erase(chickens_.begin() + i);
                     healths_.erase(healths_.begin() + i);
-                    score ++;
+                    score += level;
                 }
             }
         }
@@ -155,7 +151,7 @@ bool Figure::AppearChicken(){
             eggs_[i].y += SPEED/20;
         return false;
     }
-    if (eggs_.size()!=0){
+    if (bullets_.size()!=0){
         for (int i = 0; i < bullets_.size(); ++i)
             bullets_[i].y -= SPEED/10;
         return false;
@@ -221,16 +217,19 @@ bool Figure::CheckCollision(const SDL_Rect& a, const SDL_Rect& b) {
 void Figure::AddBullet(int x,int y) {
     if (bulletDelay == 0)
     {
-        int bulletOffset = 50 / (numBullets+1);
-        if (numBullets == 1){
-            SDL_Rect bullet = {x + bulletOffset - BULLET_WIDTH / 2, y - 10, BULLET_WIDTH, BULLET_HEIGHT};
-            bullets_.push_back(bullet);
-        }
-        else
+//        if (numBullets > 5){
+//            int bulletOffset = 50 / (numBullets / 5 +1);
+//            for (int i = 1; i <= numBullets / 5; ++i) {
+//                SDL_Rect bullet = {x + i * bulletOffset - BULLET_WIDTH / 2, y - 10, BULLET_WIDTH, BULLET_HEIGHT};
+//                bullets_.push_back(bullet);
+//            }
+//        }else{
+            int bulletOffset = 50 / (numBullets+1);
             for (int i = 1; i <= numBullets; ++i) {
                 SDL_Rect bullet = {x + i * bulletOffset - BULLET_WIDTH / 2, y - 10, BULLET_WIDTH, BULLET_HEIGHT};
                 bullets_.push_back(bullet);
             }
+//        }
         bulletDelay = 20;
     }
 }
