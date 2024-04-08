@@ -124,11 +124,11 @@ namespace Window
             return;
         }
 
-        SDL_Rect backgroundRect = {x, y, textSurface->w, textSurface->h};
+        SDL_Rect backgroundRect = {x, y, 80, 15};
         SDL_SetRenderDrawColor(gRenderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
         SDL_RenderFillRect(gRenderer, &backgroundRect);
 
-        SDL_Rect renderRect = {x, y, textSurface->w, textSurface->h};
+        SDL_Rect renderRect = {x, y, 80, 15};
         SDL_RenderCopy(gRenderer, textTexture, NULL, &renderRect);
 
         SDL_DestroyTexture(textTexture);

@@ -1,4 +1,4 @@
-#include <iostream>
+#include <bits/stdc++.h>
 #include <string>
 #include <SDL.h>
 #include <SDL_image.h>
@@ -14,7 +14,7 @@ SDL_Texture* chickenTexture = NULL;
 SDL_Texture* eggTexture = NULL;
 SDL_Texture* bloodTexture = NULL;
 SDL_Texture* bossTexture = NULL;
-SDL_Texture* khienTexture = NULL;
+SDL_Texture* shieldTexture = NULL;
 int bossHealth = 0, level = 1;
 void text()
 {
@@ -24,7 +24,7 @@ void text()
     eggTexture = Window::LoadTexture("egg.png");
     bloodTexture = Window::LoadTexture("blood.png");
     bossTexture = Window::LoadTexture("boss.png");
-    khienTexture = Window::LoadTexture("khien.png");
+    shieldTexture = Window::LoadTexture("shield.png");
 }
 
 void close()
@@ -48,12 +48,15 @@ int main(int argc, char* argv[]) {
     plane.SetPosition((SCREEN_WIDTH - 100) / 2, SCREEN_HEIGHT - 100);
     Figure figure;
     Boss boss;
+    Uint32 startTime = SDL_GetTicks();
+    Uint32 endTime = SDL_GetTicks();
+    Uint32 man1Time = SDL_GetTicks();
+    int countshield = 10;
 
-    bool quit = false;
+    bool quit = false, iscout = true, isshield = false, check = false;
     SDL_Event event;
     while (!quit) {
-        if (blood == 0)
-        {
+        if (blood == 0){
             Window::RenderText("Game Over", (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
             Window::show();
             SDL_Delay(3000);
@@ -71,13 +74,98 @@ int main(int argc, char* argv[]) {
                     plane.Move(event);
             }
         }
+        if (isshield){
+            endTime = SDL_GetTicks();
+            Window::RenderTexture(shieldTexture, plane.GetX() - 5, plane.GetY() - 5, 60, 105);
+            if (endTime - startTime >= 2000){
+                isshield = false;
+                startTime = SDL_GetTicks();
+                countshield = 1;
+            }
+        }
 
-        figure.MoveBullets();
-        figure.MoveChickens();
-        figure.MoveEggs();
-
-        //Window::RenderTexture(khienTexture, plane.GetX() - 5, plane.GetY() - 5, 60, 105);
+        if (countshield <= 3){
+            endTime = SDL_GetTicks();
+            if (endTime - startTime <= 500){
+                Window::RenderTexture(shieldTexture, plane.GetX() - 5, plane.GetY() - 5, 60, 105);
+            }else   if (endTime - startTime > 1000){
+                startTime = endTime;
+                countshield ++;
+            }
+        }
         Window::RenderTexture(planeTexture, plane.GetX(), plane.GetY(), 50, 100);
+
+        int man = level % 3;
+        if (man == 1)
+        {
+            if (iscout){
+                iscout = false;
+                std::string s = "Man " + std::to_string(level);
+                Window::RenderText(s, (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
+                Window::show();
+                man1Time = SDL_GetTicks();
+                SDL_Delay(3000);
+            }
+            endTime = SDL_GetTicks();
+            if (endTime - man1Time >= 20000){
+                check = figure.AppearChicken();
+                if (check){
+                    level ++;
+                    iscout = true;
+                    check = false;
+                }
+            }else
+                figure.MoveChickens1();
+        }else   if (man == 2){
+            if (iscout){
+                iscout = false;
+                std::string s = "Man " + std::to_string(level);
+                Window::RenderText(s, (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
+                Window::show();
+                SDL_Delay(3000);
+            }
+            figure.MoveChickens2();
+            if (figure.CheckChickens() && figure.Getdemga() >= 600){
+                iscout = true;
+                level++;
+            }
+        }else{
+            if (iscout){
+                bossHealth = BOSS_HEALTH * level / 3;
+                iscout = false;
+                std::string s = "BOSS " + std::to_string(level / 3);
+                Window::RenderText(s, (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
+                Window::show();
+                SDL_Delay(3000);
+            }
+            if (bossHealth > 0){
+                boss.Move();
+                SDL_Rect bossRect = boss.GetBoss();
+                SDL_Rect planeRect = {plane.GetX(), plane.GetY(), 50, 100};
+                if (figure.CheckCollision(bossRect,planeRect)){
+                    if (countshield > 3 && isshield == false){
+                        blood--;
+                        figure.SetNumBullets(1);
+                        isshield = true;
+                    }
+                }
+                bossHealth -= figure.CheckBoss(bossRect);
+                if (bossHealth <= 0){
+                    figure.SetScore(figure.GetScore() + 30 * level / 3);
+                    level ++;
+                    iscout = true;
+                }
+                if (rand() % 500 < 5) {
+                    figure.AddEgg({bossRect.x + (BOSS_WIDTH - EGG_WIDTH) / 2,bossRect.y + BOSS_HEIGHT - 50,bossRect.w,bossRect.h});
+                }
+                Window::RenderBloodBar(100,10,SCREEN_WIDTH-200,30,bossHealth,BOSS_HEALTH * level / 3);
+                Window::RenderTexture(bossTexture,bossRect.x,bossRect.y,BOSS_WIDTH,BOSS_HEIGHT);
+            }
+        }
+        figure.MoveBullets();
+        figure.MoveEggs();
+        figure.MoveItems();
+        figure.CheckFigure();
 
         const std::vector<SDL_Rect>& bullets = figure.GetBullets();
         for (const auto& bullet : bullets) {
@@ -93,31 +181,22 @@ int main(int argc, char* argv[]) {
         for (const auto& egg : eggs) {
             Window::RenderTexture(eggTexture, egg.x, egg.y, EGG_WIDTH, EGG_HEIGHT);
         }
-        if (figure.GetScore() % 30 == 0 && figure.GetScore() != 0)
-        {
-            bossHealth = BOSS_HEALTH * level;
-        }
-        if (bossHealth > 0){
-            boss.Move();
-            SDL_Rect bossRect = boss.GetBoss();
-            SDL_Rect planeRect = {plane.GetX(), plane.GetY(), 50, 100};
-//            if (figure.CheckCollision(bossRect,planeRect))
-//                blood--;
-            bossHealth -= figure.CheckBoss(bossRect);
-            if (bossHealth <= 0){
-                figure.SetScore(figure.GetScore() + 30 * level);
-                level ++;
-            }
-            if (rand() % 500 < 2) {
-                figure.AddEgg({bossRect.x + (BOSS_WIDTH - EGG_WIDTH) / 2,bossRect.y + BOSS_HEIGHT - 50,bossRect.w,bossRect.h});
-            }
-            Window::RenderBloodBar(100,10,SCREEN_WIDTH-200,30,bossHealth,BOSS_HEALTH * level);
-            Window::RenderTexture(bossTexture,bossRect.x,bossRect.y,BOSS_WIDTH,BOSS_HEIGHT);
-        }
-        if (figure.Check(plane.GetX(), plane.GetY(), 50, 100))
+        figure.rendItem();
+        int t = figure.Check(plane.GetX(), plane.GetY(), 50, 100);
+        if (t != 0)
+            std::cout << t << '\n';
+        if (t == 1 && countshield > 3 && isshield == false){
             blood--;
-        for (int i = 1; i <= blood; i++)
-            Window::RenderTexture(bloodTexture, SCREEN_WIDTH - 30 * i, 0, 30, 30);
+            figure.SetNumBullets(1);
+        }else   if (t == 2)
+            blood++;
+        else    if (t == 3){
+            isshield = true;
+            startTime = SDL_GetTicks();
+        }
+        Window::RenderTexture(bloodTexture, SCREEN_WIDTH - 30, 0, 30, 40);
+        std::string s = std::to_string(blood);
+        Window::RenderText(s, SCREEN_WIDTH - s.size() * 15 - 30, 1);
 
         Window::show();
         SDL_Delay(10);
