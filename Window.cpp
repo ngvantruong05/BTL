@@ -86,16 +86,21 @@ namespace Window
             SDL_FreeSurface(textSurface);
         }
     }
-    void RenderBloodBar(int x, int y, int width, int height, int currentHP, int maxHP) {
-        SDL_Rect outlineRect = { x, y, width, height};
+    void RenderBloodBar(int x, int y, int w, int h, int currentHP, int maxHP) {
+        SDL_Rect outlineRect = {x, y, w, h};
         SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
         SDL_RenderDrawRect(gRenderer, &outlineRect);
 
-        int innerWidth = (currentHP * width) / maxHP;
-
-        SDL_Rect fillRect = { x + 1, y + 1, innerWidth - 1, height - 1 };
+        SDL_Rect fillRect = {x + 1, y + 1, (currentHP * w) / maxHP - 1, h - 1 };
         SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 255);
         SDL_RenderFillRect(gRenderer, &fillRect);
+    }
+    void RenderMenu(const std::string& text, int x, int y, int w, int h) {
+        SDL_Rect outlineRect = {x, y, w, h};
+        SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
+        SDL_RenderDrawRect(gRenderer, &outlineRect);
+
+        RenderText(text,x + (w - text.size() * 15) / 2, y + (h - 40) / 2);
     }
     void RenderItem(const std::string& text, int x, int y, int number){
         SDL_Color textColor;

@@ -35,7 +35,7 @@
 	<ctime>
 	<cstdlib>
 
-1712597144 source:c:\users\nguye\documents\github\btl\main.cpp
+1712681622 source:c:\users\nguye\documents\github\btl\main.cpp
 	<bits/stdc++.h>
 	<string>
 	<SDL.h>
@@ -61,14 +61,14 @@
 	"BaseObject.h"
 	<vector>
 
-1712505198 source:c:\users\nguye\documents\github\btl\boss.cpp
+1712672752 source:c:\users\nguye\documents\github\btl\boss.cpp
 	<bits/stdc++.h>
 	<algorithm>
 	"Boss.h"
 	<SDL_image.h>
 	"Figure.h"
 
-1712594529 c:\users\nguye\documents\github\btl\window.h
+1712677499 c:\users\nguye\documents\github\btl\window.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -84,11 +84,11 @@
 	"Player.h"
 	<vector>
 
-1712572229 source:c:\users\nguye\documents\github\btl\window.cpp
+1712677942 source:c:\users\nguye\documents\github\btl\window.cpp
 	"Window.h"
 	"Player.h"
 
-1712596993 source:c:\users\nguye\documents\github\btl\figure.cpp
+1712682001 source:c:\users\nguye\documents\github\btl\figure.cpp
 	<vector>
 	"Figure.h"
 	"Window.h"

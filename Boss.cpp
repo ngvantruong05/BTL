@@ -17,19 +17,19 @@ Boss::Boss() {
 Boss::~Boss() {}
 
 void Boss::Move() {
-    rect.x += velocityX;
-    rect.y += velocityY;
+    rect.x += velocityX ;
+    rect.y += velocityY ;
     if (rect.x <= 0 || rect.x + BOSS_WIDTH >= SCREEN_WIDTH) {
         rect.x = std::max(0,rect.x);
         rect.x = std::min(rect.x, SCREEN_WIDTH - BOSS_WIDTH);
-        velocityX = rand() % 3 - 1; // -1, 0, hoặc 1
-        velocityY = rand() % 3 - 1; // -1, 0, hoặc 1
+        velocityX = rand() % 3 - 1;
+        velocityY = rand() % 3 - 1;
     }
     if (rect.y <= 30 || rect.y + BOSS_HEIGHT >= SCREEN_HEIGHT) {
         rect.y = std::max(30,rect.y);
         rect.y = std::min(rect.y, SCREEN_HEIGHT - BOSS_HEIGHT);
-        velocityX = rand() % 3 - 1; // -1, 0, hoặc 1
-        velocityY = rand() % 3 - 1; // -1, 0, hoặc 1
+        velocityX = rand() % 3 - 1;
+        velocityY = rand() % 3 - 1;
     }
 }
 

@@ -15,7 +15,7 @@ const int EGG_WIDTH = 10;
 const int EGG_HEIGHT = 30;
 const int BOSS_WIDTH = 300;
 const int BOSS_HEIGHT = 300;
-const int BOSS_HEALTH = 50;
+const int BOSS_HEALTH = 30;
 const int BULLET_WIDTH = 8;
 const int BULLET_HEIGHT = 20;
 const int MAX_HEALTH = 1;
@@ -38,6 +38,7 @@ namespace Window
     void close();
     void RenderText(const std::string& text, int x, int y);
     void RenderBloodBar(int x, int y, int width, int height, int currentHP, int maxHP);
+    void RenderMenu(const std::string& text, int x, int y, int w, int h);
     void RenderItem(const std::string& text, int x, int y, int number);
 }
 #endif
