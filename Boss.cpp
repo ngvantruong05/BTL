@@ -48,3 +48,8 @@ SDL_Rect Boss::HealthBar() {
 int Boss::Health() {
     return health;
 }
+
+void Boss::Reset(){
+    rect.x = (SCREEN_WIDTH - BOSS_WIDTH) / 2;
+    rect.y = 50;
+}

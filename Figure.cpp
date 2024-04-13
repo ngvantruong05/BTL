@@ -6,12 +6,10 @@
 using namespace std;
 Figure::Figure() {
     score = 0;
-    demga = -20;
-    number = 700;
+    Time = -20;
     bulletDelay = 0;
     numBullets = 1;
     level = 1;
-    d = 5;
     srand(time(NULL));
 }
 
@@ -21,17 +19,16 @@ void Figure::MoveBullets() {
     if (bulletDelay > 0) {
         bulletDelay--;
     }
-    for (int i = 0; i < bullets_.size(); ++i) {
+    for (int i = 0; i < (int)bullets_.size(); ++i) {
         bullets_[i].y -= SPEED/10;
         if (bullets_[i].y + BULLET_HEIGHT < 0) {
             bullets_.erase(bullets_.begin() + i);
-            cout << "*\n";
             i--;
         }
     }
 }
 void Figure::MoveEggs() {
-    for (int i = 0; i < eggs_.size(); ++i) {
+    for (int i = 0; i < (int)eggs_.size(); ++i) {
         eggs_[i].y += SPEED/15;
         if (eggs_[i].y > SCREEN_HEIGHT) {
             eggs_.erase(eggs_.begin() + i);
@@ -40,7 +37,7 @@ void Figure::MoveEggs() {
     }
 }
 void Figure::MoveItems() {
-    for (int i = 0; i < items_.size(); ++i) {
+    for (int i = 0; i < (int)items_.size(); ++i) {
         items_[i].se.y += SPEED / 15;
         if (items_[i].se.y > SCREEN_HEIGHT) {
             items_.erase(items_.begin() + i);
@@ -49,20 +46,39 @@ void Figure::MoveItems() {
     }
 }
 
+void Figure::MoveChickens1() {
+    if (rand() % 1000 < 5 * level) {
+        int x = rand() % (SCREEN_WIDTH - CHICKEN_WIDTH);
+        int y = - 100;
+        SDL_Rect chickenRect = {x, y, CHICKEN_WIDTH, CHICKEN_HEIGHT};
+        bool collided = false;
+        for (const auto& existingChicken : chickens_) {
+            if (CheckCollision(chickenRect, existingChicken)) {
+                collided = true;
+                break;
+            }
+        }
+        if (!collided) {
+            chickens_.push_back(chickenRect);
+            healths_.push_back(MAX_HEALTH * level);
+        }
+    }
+    for (int i = 0; i < chickens_.size();i++)
+        chickens_[i].y += SPEED/40;
+}
 void Figure::MoveChickens2() {
-    if (demga % 50 == 0){
+    if (Time % 25 == 0){
        SDL_Rect chicken = {0,0,0,0};
        chickens_.push_back(chicken);
        healths_.push_back(MAX_HEALTH * level);
     }
-    for (int i = 0; i < chickens_.size(); i++){
+    for (int i = 0; i < (int)chickens_.size(); i++){
         if (chickens_[i].w == 0)
-            chickens_[i].x += SPEED/20;
+            chickens_[i].x += SPEED/10;
         else
-            chickens_[i].x -= SPEED/20;
+            chickens_[i].x -= SPEED/10;
         if (chickens_[i].x >= SCREEN_WIDTH){
             if (chickens_[i].y > 300){
-                cout << 1 << '\n';
                 chickens_.erase(chickens_.begin() + i);
                 healths_.erase(healths_.begin() + i);
                 i--;
@@ -81,38 +97,17 @@ void Figure::MoveChickens2() {
             chickens_[i].w = 0;
         }
     }
-    if (demga <= 600)
-        demga ++;
+    if (Time <= MAX_TIME)
+        Time ++;
 }
 
-void Figure::MoveChickens1() {
-    if (rand() % number < 5) {
-        int x = rand() % (SCREEN_WIDTH - CHICKEN_WIDTH);
-        int y = - 100;
-        SDL_Rect chickenRect = {x, y, CHICKEN_WIDTH, CHICKEN_HEIGHT};
-        bool collided = false;
-        for (const auto& existingChicken : chickens_) {
-            if (CheckCollision(chickenRect, existingChicken)) {
-                collided = true;
-                break;
-            }
-        }
-        if (!collided) {
-            chickens_.push_back(chickenRect);
-            healths_.push_back(MAX_HEALTH * level);
-        }
-        if (number > 100)
-            number -= 1;
-    }
-    for (int i = 0; i < chickens_.size();i++)
-        chickens_[i].y += SPEED/40;
-}
 void Figure::CheckFigure(){
-    for (int i = 0; i < chickens_.size(); i++){
+    for (int i = 0; i < (int)chickens_.size(); i++){
         SDL_Rect chicken = {chickens_[i].x,chickens_[i].y,CHICKEN_WIDTH,CHICKEN_HEIGHT};
-        for (int j = 0; j < bullets_.size(); j++) {
+        for (int j = 0; j < (int)bullets_.size(); j++) {
             SDL_Rect bullet = {bullets_[j].x,bullets_[j].y,BULLET_WIDTH,BULLET_HEIGHT};
             if (CheckCollision(chicken, bullet)) {
+                Window::Mixer("collide.wav");
                 if (bullets_[j].h == 0)
                     healths_[i] -= 5;
                 else
@@ -134,6 +129,7 @@ void Figure::CheckFigure(){
                     chickens_.erase(chickens_.begin() + i);
                     healths_.erase(healths_.begin() + i);
                     i--;
+                    Window::Mixer("explosion.wav");
                     score += level;
                     break;
                 }
@@ -145,62 +141,55 @@ void Figure::CheckFigure(){
         if (chickens_[i].y > SCREEN_HEIGHT) {
             chickens_.erase(chickens_.begin() + i);
             healths_.erase(healths_.begin() + i);
-            i--;
+
         }
     }
 }
 
 bool Figure::AppearChicken(){
     if (chickens_.size()!=0){
-        for (int i = 0; i < chickens_.size(); i++)
+        for (int i = 0; i < chickens_.size();i++)
             chickens_[i].y += SPEED/40;
         return false;
     }
-    if (eggs_.size()!=0){
-        for (int i = 0; i < eggs_.size(); i++)
-            eggs_[i].y += SPEED / 20;
-        return false;
-    }
-    if (bullets_.size()!=0){
-        for (int i = 0; i < bullets_.size(); ++i)
-            bullets_[i].y -= SPEED/10;
-        return false;
-    }
-    if (items_.size()!=0){
-        for (int i = 0; i < items_.size(); i++)
-            items_[i].se.y += SPEED/20;
-        return false;
-    }
+    if (eggs_.size()!=0)        {return false;}
+    if (items_.size()!=0)       {return false;}
+    if (bullets_.size()!=0)     {return false;}
     return true;
 }
 int Figure::Check(int x, int y,int w, int h)
 {
     Window::RenderText(to_string(score), 0, 1);
     SDL_Rect planeR = {x,y,w,h};
-    for (int i = 0; i < chickens_.size(); i++) {
-        if (CheckCollision(chickens_[i], planeR)) {
+    for (int i = 0; i < (int)chickens_.size(); i++){
+        SDL_Rect chicken = {chickens_[i].x,chickens_[i].y,CHICKEN_WIDTH,CHICKEN_HEIGHT};
+        if (CheckCollision(chicken, planeR)) {
+            Window::Mixer("explosion.wav");
             chickens_.erase(chickens_.begin() + i);
             healths_.erase(healths_.begin() + i);
             i--;
             return 1;
         }
     }
-    for (int i = 0; i < eggs_.size(); ++i) {
+    for (int i = 0; i < (int)eggs_.size(); ++i) {
         if (CheckCollision(eggs_[i], planeR)) {
+            Window::Mixer("collide.wav");
             eggs_.erase(eggs_.begin() + i);
             i--;
             return 1;
         }
     }
-    for (int i = 0; i < items_.size(); i++){
+    for (int i = 0; i < (int)items_.size(); i++){
         SDL_Rect itemRect = {items_[i].se.x, items_[i].se.y, 80, 15};
         if (CheckCollision(itemRect, planeR)){
+            Window::Mixer("powerUp.wav");
             if (items_[i].fi == "BLOOD"){
                 items_.erase(items_.begin() + i);
                 return 2;
             }else   if (items_[i].fi == "AMMO"){
                 numBullets ++;
                 items_.erase(items_.begin() + i);
+                i--;
             }else{
                 items_.erase(items_.begin() + i);
                 return 3;
@@ -211,13 +200,14 @@ int Figure::Check(int x, int y,int w, int h)
 }
 int Figure::CheckBoss(SDL_Rect& bossRect){
     int sum = 0;
-    for (int i = 0; i < bullets_.size(); i++) {
+    for (int i = 0; i < (int)bullets_.size(); i++) {
         SDL_Rect bullet = {bullets_[i].x,bullets_[i].y,BULLET_WIDTH,BULLET_HEIGHT};
         if (CheckCollision(bossRect, bullet)) {
             if (bullets_[i].h == 0)
                 sum += 5;
             else
                 sum ++;
+            Window::Mixer("collide.wav");
             bullets_.erase(bullets_.begin() + i);
             i--;
         }
@@ -234,9 +224,9 @@ bool Figure::CheckCollision(const SDL_Rect& a, const SDL_Rect& b) {
 void Figure::AddBullet(int x,int y) {
     if (bulletDelay == 0)
     {
-        if (numBullets > 5){
-            int bulletOffset = 50 / (numBullets / 5 +1);
-            for (int i = 1; i <= numBullets / 5; ++i) {
+        if (numBullets > 3){
+            int bulletOffset = 50 / (numBullets / 3 +1);
+            for (int i = 1; i <= numBullets / 3; ++i) {
                 SDL_Rect bullet = {x + i * bulletOffset - BULLET_WIDTH / 2, y - 10, 0, 0};
                 bullets_.push_back(bullet);
             }
@@ -247,6 +237,7 @@ void Figure::AddBullet(int x,int y) {
                 bullets_.push_back(bullet);
             }
         }
+        Window::Mixer("Shoot.wav");
         bulletDelay = 20;
     }
 }
@@ -277,4 +268,15 @@ const std::vector<int>& Figure::Gethealth() const {
 void Figure::rendItem(){
     for (int i = 0; i < items_.size(); i ++)
         Window::RenderItem(items_[i].fi, items_[i].se.x, items_[i].se.y, items_[i].se.h);
+}
+
+void Figure::Clear(){
+    bullets_.clear();
+    chickens_.clear();
+    healths_.clear();
+    eggs_.clear();
+    items_.clear();
+    score = 0;
+    bulletDelay = 0;
+    level = 1;
 }

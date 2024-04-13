@@ -16,6 +16,7 @@ SDL_Texture* eggTexture = NULL;
 SDL_Texture* bloodTexture = NULL;
 SDL_Texture* bossTexture = NULL;
 SDL_Texture* shieldTexture = NULL;
+
 void text(){
     planeTexture = Window::LoadTexture("plane.png");
     bulletTexture = Window::LoadTexture("sphere.png");
@@ -32,78 +33,193 @@ void close(){
     SDL_DestroyTexture(chickenTexture);
     SDL_DestroyTexture(bloodTexture);
 }
-bool menu(SDL_Event& event, bool& quit, bool& play, bool& rankings) {
-    while (SDL_PollEvent(&event) != 0) {
-        if (event.type == SDL_QUIT) {
-            quit = true;
-            return false;
-        } else if (event.type == SDL_MOUSEBUTTONDOWN) {
-            int x, y;
-            SDL_GetMouseState(&x, &y);
-            if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 && y <= SCREEN_HEIGHT / 3 + 50) {
-                play = true;
-                return false;
-            } else if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 100 && y <= SCREEN_HEIGHT / 3 + 150) {
-                rankings = true;
-                return false;
-            } else if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 200 && y <= SCREEN_HEIGHT / 3 + 250) {
-                quit = true;
-                return false;
-            }
-        }
-    }
-
-    Window::RenderMenu("Play", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3, 300 , 50);
-    Window::RenderMenu("Score Rankings", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 100, 300 , 50);
-    Window::RenderMenu("Exit", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 200, 300 , 50);
-    Window::show();
-
-    return true;
-}
 
 int main(int argc, char* argv[]) {
     if (!Window::init()) {
         std::cout << "Failed to initialize!" << std::endl;
         return -1;
     }
-
     text();
 
-    int blood = 3;
     Player plane;
-    plane.SetPosition((SCREEN_WIDTH - 100) / 2, SCREEN_HEIGHT - 100);
     Figure figure;
     Boss boss;
+    SDL_Rect bkground = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     Uint32 startTime = SDL_GetTicks();
     Uint32 endTime = SDL_GetTicks();
     Uint32 man1Time = SDL_GetTicks();
-    int countshield = 10;
-    int bossHealth = 0, level = 1;
+    int bossHealth = 0, level = 1, blood = 3, countshield = 10;
+    std::string yourname="";
 
-    bool quit = false, iscout = false, isshield = false, check = false, inMenu = true;
-    bool play = false;
-    bool rankings = false;
+    bool quit = false, iscout = false, isshield = false, check = false, menu = true, endgame = false;
+    bool play = false, rankings = false, sname = false;
 
     SDL_Event event;
     while (!quit) {
-        if (inMenu){
-            inMenu = menu(event, quit, play, rankings);
-//            Window::RenderMenu("Play", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3, 300 , 50);
-//            Window::RenderMenu("Score Rankings", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 100, 300 , 50);
-//            Window::RenderMenu("Exit", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 200, 300 , 50);
-//            Window::show();
-//            SDL_Delay(10);
+        if (menu){
+            while (SDL_PollEvent(&event) != 0) {
+                if (event.type == SDL_QUIT) {
+                    quit = true;
+                    menu = false;
+                    continue;
+                } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 && y <= SCREEN_HEIGHT / 3 + 50) {
+                        Window::Mixer("click.wav");
+                        sname = true;
+                        menu = false;
+                        figure.Clear();
+                        level = 1;
+                        blood = 3;
+                        iscout = true;
+                        continue;
+                    } else if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 100 && y <= SCREEN_HEIGHT / 3 + 150) {
+                        Window::Mixer("click.wav");
+                        rankings = true;
+                        menu = false;
+                        continue;
+                    } else if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 200 && y <= SCREEN_HEIGHT / 3 + 250) {
+                        Window::Mixer("click.wav");
+                        quit = true;
+                        continue;
+                    }
+                }
+            }
+
+            Window::RenderMenu("Play", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3, 300 , 50);
+            Window::RenderMenu("Score Rankings", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 100, 300 , 50);
+            Window::RenderMenu("Exit", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 200, 300 , 50);
+            Window::show();
         }
 
-        if (blood == 0){
-            Window::RenderText("Game Over", (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
+        if (rankings){
+            std::ifstream file(SCORES_FILE);
+            std::string player[10];
+            int score, i = 0, scores[10];
+            if (file.is_open()) {
+                std::string name;
+                while (file >> name >> score) {
+                    player[i] = name;
+                    scores[i++] = score;
+                }
+                file.close();
+            } else {
+                std::cerr << "Failed to open file for reading!" << std::endl;
+                rankings = false;
+                quit = true;
+            }
+
+            Window::RenderFrame(SCREEN_WIDTH / 4 - 10, 165 , SCREEN_WIDTH / 2 + 25,180);
+            Window::RenderMenu("Ranking score", SCREEN_WIDTH / 2 - 150, 120, 300,45);
+            for (int i = 0; i < 5; i++){
+                Window::RenderText(player[i],SCREEN_WIDTH / 4,SCREEN_HEIGHT / 4 + 30 * i);
+            }
+            for (int i = 0; i < 5; i++){
+                std::string stringscore = std::to_string(scores[i]);
+                Window::RenderText(stringscore,3*SCREEN_WIDTH / 4 - stringscore.size() * 15,SCREEN_HEIGHT / 4 + 30 * i);
+            }
+            while (SDL_PollEvent(&event) != 0) {
+                if (event.type == SDL_QUIT) {
+                    quit = true;
+                    menu = false;
+                    continue;
+                } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 150 && y <= SCREEN_HEIGHT / 3 + 200) {
+                        Window::Mixer("click.wav");
+                        menu = true;
+                        rankings = false;
+                        continue;
+                    }else   if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 225 && y <= SCREEN_HEIGHT / 3 + 275) {
+                        Window::Mixer("click.wav");
+                        quit = true;
+                        rankings = false;
+                        continue;
+                    }
+                }
+            }
+            Window::RenderMenu("Menu", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 150, 300 , 50);
+            Window::RenderMenu("Exit", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 225, 300 , 50);
             Window::show();
-            SDL_Delay(3000);
-            break;
         }
+
+        if (endgame){
+            while (SDL_PollEvent(&event) != 0) {
+                if (event.type == SDL_QUIT) {
+                    quit = true;
+                    endgame = false;
+                    continue;
+                } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 100 && y <= SCREEN_HEIGHT / 3 + 150) {
+                        Window::Mixer("click.wav");
+                        sname = true;
+                        blood = 3;
+                        level = 1;
+                        endgame = false;
+                        iscout = true;
+                        figure.Clear();
+                        continue;
+                    } else  if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 200 && y <= SCREEN_HEIGHT / 3 + 250) {
+                        Window::Mixer("click.wav");
+                        menu = true;
+                        endgame = false;
+                        continue;
+                    }
+                }
+            }
+
+            std::string s = "Your score is " + std::to_string(figure.GetScore());
+            Window::RenderText(s, SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3);
+            Window::RenderMenu("Play again", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 100, 300 , 50);
+            Window::RenderMenu("Menu", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 200, 300 , 50);
+            Window::show();
+        }
+
+        if (sname){
+            while (SDL_PollEvent(&event) != 0) {
+                if (event.type == SDL_QUIT) {
+                    quit = true;
+                }else   if (event.type == SDL_TEXTINPUT) {
+                    yourname += event.text.text;
+                }else if (event.type == SDL_KEYDOWN) {
+                    if (event.key.keysym.sym == SDLK_BACKSPACE && !yourname.empty()) {
+                        yourname.pop_back();
+                    }else if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER) {
+                        if (yourname.find(' ') < yourname.size() || yourname.size() > 10){
+                            yourname = "";
+                            continue;
+                        }
+                        play = true;
+                        sname = false;
+                    }
+                }
+            }
+            if (yourname.size() > 10)
+                if (yourname.size() > 15)
+                    yourname = "";
+                else
+                    Window::RenderText("Your name cannot exceed 10 characters", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3);
+            else    if (yourname.find(' ') < yourname.size())
+                Window::RenderText("The name cannot contain spaces", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3);
+            else
+                Window::RenderText("Please enter your name", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3);
+            if (yourname.size() > 0)
+                Window::RenderMenu(yourname, SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 100, 300 , 50);
+            else
+                Window::RenderFrame(SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 100, 300 , 50);
+            Window::show();
+        }
+
         if (play){
             if (blood == 0){
+                Window::resetRanking(yourname,figure.GetScore());
+                yourname = "";
                 play = false;
+                endgame = true;
                 continue;
             }
             while (SDL_PollEvent(&event) != 0) {
@@ -124,7 +240,7 @@ int main(int argc, char* argv[]) {
             {
                 if (iscout){
                     iscout = false;
-                    std::string s = "Man " + std::to_string(level);
+                    std::string s = "Level " + std::to_string(level);
                     Window::RenderText(s, (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
                     Window::show();
                     man1Time = SDL_GetTicks();
@@ -134,6 +250,7 @@ int main(int argc, char* argv[]) {
                 if (endTime - man1Time >= 20000){
                     check = figure.AppearChicken();
                     if (check){
+                        SDL_Delay(500);
                         level ++;
                         iscout = true;
                         check = false;
@@ -143,16 +260,17 @@ int main(int argc, char* argv[]) {
             }else   if (man == 2){
                 if (iscout){
                     iscout = false;
-                    std::string s = "Man " + std::to_string(level);
+                    std::string s = "Level " + std::to_string(level);
+                    figure.SetTime(-20);
                     Window::RenderText(s, (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
                     Window::show();
                     SDL_Delay(3000);
                 }
                 figure.MoveChickens2();
-                if (figure.CheckChickens() && figure.Getdemga() >= 600){
+                if (figure.CheckChickens() && figure.GetTime() >= MAX_TIME){
                     check = figure.AppearChicken();
                     if (check){
-                        figure.SetDemga(-20);
+                        SDL_Delay(500);
                         level ++;
                         iscout = true;
                         check = false;
@@ -161,6 +279,7 @@ int main(int argc, char* argv[]) {
             }else{
                 if (iscout){
                     bossHealth = BOSS_HEALTH * level / 3;
+                    boss.Reset();
                     iscout = false;
                     std::string s = "BOSS " + std::to_string(level / 3);
                     Window::RenderText(s, (SCREEN_WIDTH - 150) / 2, (SCREEN_HEIGHT - 50) / 2);
@@ -175,10 +294,13 @@ int main(int argc, char* argv[]) {
                         if (countshield > 3 && isshield == false){
                             blood--;
                             figure.SetNumBullets(1);
-                            isshield = true;
+                            if (blood > 0)
+                                isshield = true;
                         }
                     }
                     bossHealth -= figure.CheckBoss(bossRect);
+                    if (bossHealth <= 0)
+                        Window::Mixer("boss.wav");
                     if (rand() % 500 < 5) {
                         figure.AddEgg({bossRect.x + (BOSS_WIDTH - EGG_WIDTH) / 2,bossRect.y + BOSS_HEIGHT - 50,bossRect.w,bossRect.h});
                     }
@@ -188,6 +310,7 @@ int main(int argc, char* argv[]) {
                 if (bossHealth <= 0){
                     check = figure.AppearChicken();
                     if (check){
+                        SDL_Delay(500);
                         figure.SetScore(figure.GetScore() + 30 * level / 3);
                         figure.SetLevel(level / 3 + 1);
                         level ++;
@@ -247,7 +370,8 @@ int main(int argc, char* argv[]) {
             if (t == 1 && countshield > 3 && isshield == false){
                 blood--;
                 figure.SetNumBullets(1);
-                isshield = true;
+                if (blood > 0)
+                    isshield = true;
             }else   if (t == 2)
                 blood++;
             else    if (t == 3){

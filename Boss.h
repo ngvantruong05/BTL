@@ -8,6 +8,7 @@ public:
     Boss();
     ~Boss();
 
+    void Reset();
     SDL_Rect GetBoss();
     void Move();
     SDL_Rect HealthBar();

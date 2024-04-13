@@ -1,14 +1,9 @@
 #include "Player.h"
 #include "Window.h"
 
-Player::Player() : x(0), y(0), w(50), h(100) {}
+Player::Player() : x((SCREEN_WIDTH - 100) / 2), y( SCREEN_HEIGHT - 100), w(50), h(100) {}
 
 Player::~Player() {}
-
-void Player::SetPosition(int x, int y) {
-    this->x = x;
-    this->y = y;
-}
 
 void Player::Move(SDL_Event& event) {
     if (event.key.keysym.sym == SDLK_LEFT) {
