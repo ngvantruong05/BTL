@@ -52,13 +52,13 @@ int main(int argc, char* argv[]) {
     std::string yourname="";
 
     bool quit = false, iscout = false, isshield = false, check = false, menu = true, endgame = false;
-    bool play = false, rankings = false, sname = false;
+    bool play = false, rankings = false, sname = false, pause = false;
 
     SDL_Event event;
     while (!quit) {
         if (menu){
             while (SDL_PollEvent(&event) != 0) {
-                if (event.type == SDL_QUIT) {
+                if (event.type == SDL_QUIT ) {
                     quit = true;
                     menu = false;
                     continue;
@@ -84,6 +84,12 @@ int main(int argc, char* argv[]) {
                         quit = true;
                         continue;
                     }
+                } else   if (event.type == SDL_KEYDOWN) {
+                    if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                        menu = false;
+                        continue;
+                    }
                 }
             }
 
@@ -93,6 +99,53 @@ int main(int argc, char* argv[]) {
             Window::show();
         }
 
+        if (pause){
+            while (SDL_PollEvent(&event) != 0) {
+                if (event.type == SDL_QUIT ) {
+                    quit = true;
+                    pause = false;
+                    continue;
+                } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 && y <= SCREEN_HEIGHT / 3 + 50) {
+                        Window::Mixer("click.wav");
+                        play = true;
+                        pause = false;
+                        continue;
+                    } else if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 100 && y <= SCREEN_HEIGHT / 3 + 150) {
+                        Window::Mixer("click.wav");
+                        yourname = "";
+                        blood = 3;
+                        level = 1;
+                        iscout = true;
+                        figure.Clear();
+                        menu = true;
+                        pause = false;
+                        continue;
+                    } else if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 200 && y <= SCREEN_HEIGHT / 3 + 250) {
+                        Window::Mixer("click.wav");
+                        quit = true;
+                        continue;
+                    }
+                } else   if (event.type == SDL_KEYDOWN) {
+                    if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                        menu = false;
+                        continue;
+                    }else if (event.key.keysym.sym == SDLK_F5) {
+                        pause = false;
+                        play = true;
+                        continue;
+                    }
+                }
+            }
+
+            Window::RenderMenu("Continiue", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3, 300 , 50);
+            Window::RenderMenu("Menu", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 100, 300 , 50);
+            Window::RenderMenu("Exit", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 200, 300 , 50);
+            Window::show();
+        }
         if (rankings){
             std::ifstream file(SCORES_FILE);
             std::string player[10];
@@ -138,6 +191,12 @@ int main(int argc, char* argv[]) {
                         rankings = false;
                         continue;
                     }
+                } else   if (event.type == SDL_KEYDOWN) {
+                    if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                        rankings = false;
+                        continue;
+                    }
                 }
             }
             Window::RenderMenu("Menu", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 150, 300 , 50);
@@ -169,6 +228,12 @@ int main(int argc, char* argv[]) {
                         endgame = false;
                         continue;
                     }
+                } else   if (event.type == SDL_KEYDOWN) {
+                    if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                        endgame = false;
+                        continue;
+                    }
                 }
             }
 
@@ -185,6 +250,15 @@ int main(int argc, char* argv[]) {
                     quit = true;
                 }else   if (event.type == SDL_TEXTINPUT) {
                     yourname += event.text.text;
+                }else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    if (x >= SCREEN_WIDTH / 2 - 150 && x <= SCREEN_WIDTH / 2 + 150 && y >= SCREEN_HEIGHT / 3 + 200 && y <= SCREEN_HEIGHT / 3 + 250) {
+                        Window::Mixer("click.wav");
+                        quit = true;
+                        rankings = false;
+                        continue;
+                    }
                 }else if (event.type == SDL_KEYDOWN) {
                     if (event.key.keysym.sym == SDLK_BACKSPACE && !yourname.empty()) {
                         yourname.pop_back();
@@ -195,6 +269,10 @@ int main(int argc, char* argv[]) {
                         }
                         play = true;
                         sname = false;
+                    }else if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                        sname = false;
+                        continue;
                     }
                 }
             }
@@ -211,6 +289,7 @@ int main(int argc, char* argv[]) {
                 Window::RenderMenu(yourname, SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 100, 300 , 50);
             else
                 Window::RenderFrame(SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 100, 300 , 50);
+            Window::RenderMenu("Exit", SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 3 + 200, 300 , 50);
             Window::show();
         }
 
@@ -229,8 +308,15 @@ int main(int argc, char* argv[]) {
                 else if (event.type == SDL_KEYDOWN) {
                     if (event.key.keysym.sym == SDLK_SPACE) {
                         figure.AddBullet(plane.GetX(), plane.GetY());
-                    }
-                    else
+                    }else if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                        play = false;
+                        continue;
+                    }else if (event.key.keysym.sym == SDLK_F5) {
+                        pause = true;
+                        play = false;
+                        continue;
+                    }else
                         plane.Move(event);
                 }
             }
@@ -247,7 +333,7 @@ int main(int argc, char* argv[]) {
                     SDL_Delay(3000);
                 }
                 endTime = SDL_GetTicks();
-                if (endTime - man1Time >= 20000){
+                if (endTime - man1Time >= 40000){
                     check = figure.AppearChicken();
                     if (check){
                         SDL_Delay(500);
@@ -345,7 +431,7 @@ int main(int argc, char* argv[]) {
             if (isshield){
                 endTime = SDL_GetTicks();
                 Window::RenderTexture(shieldTexture, plane.GetX() - 5, plane.GetY() - 5, 60, 105);
-                if (endTime - startTime >= 2000){
+                if (endTime - startTime >= 1000){
                     isshield = false;
                     startTime = SDL_GetTicks();
                     countshield = 1;

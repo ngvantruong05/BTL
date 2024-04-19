@@ -128,11 +128,12 @@ void Figure::CheckFigure(){
                     }
                     chickens_.erase(chickens_.begin() + i);
                     healths_.erase(healths_.begin() + i);
-                    i--;
-                    Window::Mixer("explosion.wav");
-                    score += level;
-                    break;
-                }
+                }else
+                    continue;
+                i--;
+                Window::Mixer("explosion.wav");
+                score += level;
+                break;
             }
         }
         if (rand() % 5000 < chickens_.size()) {
@@ -279,4 +280,5 @@ void Figure::Clear(){
     score = 0;
     bulletDelay = 0;
     level = 1;
+    numBullets = 1;
 }
