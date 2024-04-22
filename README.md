@@ -9,3 +9,4 @@ Mã số sinh viên: 23020167
 # Đánh giá điểm
 - 7.5 - 8.5
 - Lý do: Game tự viết có đồ họa đơn giản (âm thanh, texture, hoạt hình, chuyển động, thuật toán)
+- Thông tin game : <a href="https://drive.google.com/file/d/16a4UFhIV7d7OBiaof8Taw8p0RMSDRpWC/view?usp=sharing">tại đây</a>
