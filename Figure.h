@@ -8,7 +8,6 @@
 class Figure {
 public:
     Figure();
-    ~Figure();
     int GetScore() const {return score;}
     int GetTime() const {return Time;}
     int GetNumBullets() const {return numBullets;}

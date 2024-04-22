@@ -133,7 +133,7 @@ int main(int argc, char* argv[]) {
                         quit = true;
                         menu = false;
                         continue;
-                    }else if (event.key.keysym.sym == SDLK_F5) {
+                    }else if (event.key.keysym.sym == SDLK_p) {
                         pause = false;
                         play = true;
                         continue;
@@ -312,7 +312,7 @@ int main(int argc, char* argv[]) {
                         quit = true;
                         play = false;
                         continue;
-                    }else if (event.key.keysym.sym == SDLK_F5) {
+                    }else if (event.key.keysym.sym == SDLK_p) {
                         pause = true;
                         play = false;
                         continue;

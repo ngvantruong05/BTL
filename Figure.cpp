@@ -13,8 +13,6 @@ Figure::Figure() {
     srand(time(NULL));
 }
 
-Figure::~Figure() {}
-
 void Figure::MoveBullets() {
     if (bulletDelay > 0) {
         bulletDelay--;
@@ -52,8 +50,8 @@ void Figure::MoveChickens1() {
         int y = - 100;
         SDL_Rect chickenRect = {x, y, CHICKEN_WIDTH, CHICKEN_HEIGHT};
         bool collided = false;
-        for (const auto& existingChicken : chickens_) {
-            if (CheckCollision(chickenRect, existingChicken)) {
+        for (const auto& Chicken : chickens_) {
+            if (CheckCollision(chickenRect, Chicken)) {
                 collided = true;
                 break;
             }
@@ -103,6 +101,15 @@ void Figure::MoveChickens2() {
 
 void Figure::CheckFigure(){
     for (int i = 0; i < (int)chickens_.size(); i++){
+        if (rand() % 5000 < chickens_.size()) {
+            Figure::AddEgg({chickens_[i].x + (CHICKEN_WIDTH - EGG_WIDTH) / 2,chickens_[i].y + CHICKEN_HEIGHT,chickens_[i].w,chickens_[i].h});
+        }
+        if (chickens_[i].y > SCREEN_HEIGHT) {
+            chickens_.erase(chickens_.begin() + i);
+            healths_.erase(healths_.begin() + i);
+            i--;
+            continue;
+        }
         SDL_Rect chicken = {chickens_[i].x,chickens_[i].y,CHICKEN_WIDTH,CHICKEN_HEIGHT};
         for (int j = 0; j < (int)bullets_.size(); j++) {
             SDL_Rect bullet = {bullets_[j].x,bullets_[j].y,BULLET_WIDTH,BULLET_HEIGHT};
@@ -135,14 +142,6 @@ void Figure::CheckFigure(){
                 score += level;
                 break;
             }
-        }
-        if (rand() % 5000 < chickens_.size()) {
-            Figure::AddEgg({chickens_[i].x + (CHICKEN_WIDTH - EGG_WIDTH) / 2,chickens_[i].y + CHICKEN_HEIGHT,chickens_[i].w,chickens_[i].h});
-        }
-        if (chickens_[i].y > SCREEN_HEIGHT) {
-            chickens_.erase(chickens_.begin() + i);
-            healths_.erase(healths_.begin() + i);
-
         }
     }
 }
@@ -232,7 +231,7 @@ void Figure::AddBullet(int x,int y) {
                 bullets_.push_back(bullet);
             }
         }else{
-            int bulletOffset = 50 / (numBullets+1);
+            int bulletOffset = 50 / (numBullets + 1);
             for (int i = 1; i <= numBullets; ++i) {
                 SDL_Rect bullet = {x + i * bulletOffset - BULLET_WIDTH / 2, y - 10, BULLET_WIDTH, BULLET_HEIGHT};
                 bullets_.push_back(bullet);

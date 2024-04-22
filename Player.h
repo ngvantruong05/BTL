@@ -4,7 +4,6 @@
 class Player {
 public:
     Player();
-    ~Player();
     int GetX() const { return x; }
     int GetY() const { return y; }
     void Move(SDL_Event& event);

@@ -3,8 +3,6 @@
 
 Player::Player() : x((SCREEN_WIDTH - 100) / 2), y( SCREEN_HEIGHT - 100), w(50), h(100) {}
 
-Player::~Player() {}
-
 void Player::Move(SDL_Event& event) {
     if (event.key.keysym.sym == SDLK_LEFT) {
         x -= SPEED;
